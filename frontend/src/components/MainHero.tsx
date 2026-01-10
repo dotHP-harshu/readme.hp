@@ -1,16 +1,21 @@
 import {
+  AlertCircle,
+  AlertTriangle,
   CircleCheckBig,
   FolderClosed,
   Link2,
+  Loader2,
   MoveRight,
   WandSparkles,
 } from "lucide-react";
 
-import Tippy from "@tippyjs/react";
-import { useEffect, useState } from "react";
-import { shuffleArray } from "../utils/MainHeroUtil";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
+import { getRepoTreeApi } from "../api/githubApi";
+import type { fileTreeElement } from "../types/types";
+import RepoFileItem from "./RepoFileSelection/RepoFileItem";
 
-let originalPathColors = [
+const PATH_COLORS = [
   "#FF9F1C", // mango
   "#FF6B6B", // watermelon
   "#6A4C93", // grape
@@ -27,7 +32,55 @@ let originalPathColors = [
 // https://api.github.com/repos/[USER]/[REPO]/git/trees/[BRANCH]?recursive=1
 
 function MainHero() {
-  const [pathColors , setPathColors ] = useState<string[]>(()=>shuffleArray(originalPathColors))
+  const pathColors = useMemo(() => {
+    return shuffleArray(PATH_COLORS);
+  }, []);
+
+  const [impRepoFiles, setImpRepoFiles] = useState<fileTreeElement[]>([]);
+  const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
+  const [repoError, setrepoError] = useState<string>("");
+  const [urlError, seturlError] = useState("");
+
+  const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
+
+  const getRepoTree = useCallback(async () => {
+    setrepoError("");
+    setIsLoadingFiles(true);
+    const { data, error } = await getRepoTreeApi("");
+
+    if (error) {
+      setIsLoadingFiles(false);
+      return setrepoError(error);
+    }
+
+    if (data && Array.isArray(data)) {
+      const impFiles = makeImpFileArray(data);
+      setImpRepoFiles(impFiles);
+      setSelectedPaths(new Set(impFiles.map((f) => f.path)));
+    }
+    setIsLoadingFiles(false);
+    setrepoError("");
+  }, []);
+
+  const toggleFile = useCallback((path: string) => {
+    setSelectedPaths((prev) => {
+      const next = new Set(prev);
+      next.has(path) ? next.delete(path) : next.add(path);
+      return next;
+    });
+  }, []);
+
+  const selectedFiles = useMemo(() => {
+    return impRepoFiles.filter((f) => selectedPaths.has(f.path));
+  }, [selectedPaths, impRepoFiles]);
+
+  const totalSizeOfSelectedFiles = useMemo(() => {
+    return selectedFiles.reduce((sum, f) => sum + (f.size ?? 0), 0);
+  }, [selectedFiles]);
+
+  useEffect(() => {
+    getRepoTree();
+  }, []);
 
   return (
     <>
@@ -88,63 +141,69 @@ function MainHero() {
             </div>
           </div>
 
+          {/* Files Selection  */}
           <div className="bg-surface-secondary-light dark:bg-surface-secondary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 ">
-            <div className="flex items-center justify-between gap-2 relative px-4 rounded-lg hover:bg-surface-secondary-dark/5 dark:hover:bg-surface-secondary-light/5 ">
+            <div className="flex items-center justify-between gap-2 relative px-4 rounded-lg  ">
               <p className="truncate cursor-pointer peer">Folder/file</p>
               <small className="inline-block font-code text-text-muted-light dark:text-text-muted-dark text-center w-20 overflow-hidden">
                 size
               </small>
             </div>
             <ul className="overflow-y-auto scroller max-h-[40dvh]">
-              {files.map((file, index) => (
-                <li
-                  className="flex items-stretch gap-2 relative py-2 px-4 rounded-lg hover:bg-surface-secondary-dark/5 dark:hover:bg-surface-secondary-light/5 "
-                  key={index}
-                >
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 self-center accent-blue-500 bg-bg-light dark:bg-bg-dark cursor-pointer text-green-600"
+              {isLoadingFiles && (
+                <div className="flex flex-col gap-4 justify-center items-center w-full min-h-[20vh]">
+                  <Loader2 className="text-text-muted-light dark:text-text-muted-dark animate-spin" />
+                </div>
+              )}
+
+              {!isLoadingFiles && repoError && (
+                <div className="flex flex-col gap-4 justify-center items-center w-full min-h-[20vh]">
+                  <AlertTriangle className="text-red-500" />
+                  <p className="text-red-500 max-w-xl text-center">
+                    {repoError}
+                  </p>
+                </div>
+              )}
+
+              {!isLoadingFiles && !repoError && impRepoFiles.length === 0 && (
+                <div className="flex flex-col gap-4 justify-center items-center w-full min-h-[20vh]">
+                  <AlertCircle className="text-text-muted-light dark:text-text-muted-dark" />
+                  <p className="text-text-muted-light dark:text-text-muted-dark max-w-xl text-center ">
+                    Please search for repository.
+                  </p>
+                </div>
+              )}
+
+              {impRepoFiles &&
+                impRepoFiles.length > 0 &&
+                impRepoFiles.map((file) => (
+                  <RepoFileItem
+                    key={file.path}
+                    file={file}
+                    toggleFile={toggleFile}
+                    pathColors={pathColors}
+                    isChecked={selectedPaths.has(file.path)}
                   />
-                  <Tippy
-                    content={file}
-                    className="bg-bg-light font-code dark:bg-bg-dark text-text-muted-light dark:text-text-muted-dark border-2 border-border-light dark:border-border-dark rounded-lg text-sm px-2 py-1 wrap-break-word  w-full max-w-xl"
-                  >
-                    <p className="w-full truncate cursor-pointer peer">
-                      {file.split("/").map((filePart, index) => (
-                        <span
-                          key={index}
-                          style={{
-                            color:
-                              pathColors[
-                                index < pathColors.length
-                                  ? index
-                                  : index % pathColors.length
-                              ],
-                          }}
-                        >
-                          {filePart}/
-                        </span>
-                      ))}
-                    </p>
-                  </Tippy>
-                  <small className="inline-block font-code text-text-muted-light dark:text-text-muted-dark max-w-20 overflow-hidden">
-                    sifdadfaxe
-                  </small>
-                </li>
-              ))}
+                ))}
             </ul>
           </div>
 
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div>
               <small className="font-code text-text-muted-light dark:text-text-muted-dark">
-                ~810 tokens selected
+                {`~ ${
+                  totalSizeOfSelectedFiles / 1024 < 1024
+                    ? `${(totalSizeOfSelectedFiles / 1024).toFixed(2)} Kb`
+                    : `${(totalSizeOfSelectedFiles / (1024 * 1024)).toFixed(
+                        2
+                      )} Mb`
+                } selected `}
               </small>
             </div>
             <div className="flex justify-center items-center gap-2">
               <button className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
                 <span className="text-base font-semibold tracking-tight">
-                  Analyze Selected Files{" "}
+                  Analyze Selected Files
                 </span>
                 <MoveRight />
               </button>
@@ -158,18 +217,3 @@ function MainHero() {
 }
 
 export default MainHero;
-
-const files: string[] = [
-  "frontend/public/images/result_banner.png",
-  "frontend/public/images/signup.jpg",
-  "frontend/public/images/stepBg/step1_transport.png",
-  "frontend/public/images/stepBg/step2_electricity.png",
-  "frontend/public/images/stepBg/step3_diet.png",
-  "frontend/public/images/stepBg/step4_shopping.png",
-  "frontend/public/images/stepBg/step6_water.png",
-  "frontend/public/images/stepIcon/step1_heading.png",
-  "frontend/public/images/stepIcon/step2_heading.png",
-  "frontend/public/images/stepIcon/step3_heading.png",
-  "frontend/public/images/stepIcon/step4_heading.png",
-  "frontend/public/images/stepBg/step5_digital.f dfajldkfjalkdfjlajdl fajskldfjalsdlfadkjfaldjfdslfajkklaskdjpng",
-];
