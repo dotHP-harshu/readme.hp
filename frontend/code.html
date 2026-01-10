@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI README Generator</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Fira+Code:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1fb1f9",
+                        "primary-hover": "#1796d4",
+                        "background-light": "#f9f9fa",
+                        "background-dark": "#0c0c0d",
+                        "surface-dark": "#18181a",
+                        "border-dark": "#27272a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "mono": ["Fira Code", "monospace"],
+                    },
+                    backgroundImage: {
+                        'glow-gradient': 'radial-gradient(circle at center, rgba(31, 177, 249, 0.15) 0%, rgba(12, 12, 13, 0) 70%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for editor feeling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0c0c0d; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a; 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46; 
+        }
+        
+        .editor-line-numbers {
+            counter-reset: line;
+        }
+        .editor-line::before {
+            counter-increment: line;
+            content: counter(line);
+            display: inline-block;
+            width: 30px;
+            color: #52525b;
+            text-align: right;
+            margin-right: 16px;
+            font-size: 0.875rem;
+            user-select: none;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="w-full border-b border-border-dark bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="max-w-[1400px] mx-auto px-6 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-background-dark shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[20px] font-bold">auto_stories</span>
+</div>
+<h1 class="text-white text-lg font-bold tracking-tight">AI README Gen</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Pricing</a>
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Docs</a>
+<a class="text-slate-400 hover:text-white text-sm font-medium transition-colors" href="#">Blog</a>
+</nav>
+<div class="flex items-center gap-4">
+<a class="text-slate-300 hover:text-white text-sm font-medium hidden sm:block" href="#">Login</a>
+<button class="flex items-center justify-center h-9 px-4 bg-white text-background-dark hover:bg-slate-200 rounded-md text-sm font-bold transition-colors">
+                    Sign Up
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-1 w-full flex flex-col items-center">
+<!-- Hero & Input Section -->
+<section class="w-full max-w-[960px] px-6 py-20 flex flex-col items-center justify-center relative">
+<!-- Background Glow -->
+<div class="absolute inset-0 bg-glow-gradient pointer-events-none z-0"></div>
+<div class="relative z-10 flex flex-col items-center text-center gap-6">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border-dark bg-surface-dark/50 backdrop-blur-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-medium text-primary">v2.0 Now Available</span>
+</div>
+<h2 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400 max-w-3xl">
+                    Generate professional documentation from your code.
+                </h2>
+<p class="text-slate-400 text-lg max-w-xl leading-relaxed">
+                    Paste a GitHub repository URL, select your context, and let our AI document your codebase in seconds.
+                </p>
+<!-- Input Component -->
+<div class="w-full max-w-2xl mt-8 group">
+<div class="flex w-full items-stretch rounded-xl overflow-hidden border border-border-dark bg-surface-dark shadow-2xl transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary">
+<div class="flex items-center justify-center pl-4 text-slate-500">
+<span class="material-symbols-outlined">link</span>
+</div>
+<input class="flex-1 bg-transparent border-none text-white placeholder-slate-600 px-4 py-4 font-mono text-sm focus:ring-0 focus:outline-none w-full" placeholder="https://github.com/username/project" type="text"/>
+<div class="pr-2 py-2 flex items-center">
+<button class="h-full px-6 bg-primary hover:bg-primary-hover text-background-dark font-bold rounded-lg transition-all flex items-center gap-2 shadow-[0_0_15px_rgba(31,177,249,0.3)]">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+<span class="hidden sm:inline">Generate</span>
+</button>
+</div>
+</div>
+<div class="flex justify-between mt-3 px-2 text-xs text-slate-500 font-medium">
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Public Repos</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">lock</span> Private Repos (Auth)</span>
+</div>
+<span>Supports JS, TS, Python, Go, Rust</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Repository File Selection Section -->
+<section class="w-full max-w-[960px] px-6 pb-12">
+<div class="rounded-xl border border-border-dark bg-surface-dark overflow-hidden shadow-sm">
+<div class="px-5 py-4 border-b border-border-dark flex items-center justify-between bg-[#131315]">
+<h3 class="text-white font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">folder_open</span>
+                        Repository Context
+                    </h3>
+<div class="text-xs text-slate-400 font-mono">github.com/ui-labs/platform</div>
+</div>
+<div class="p-2">
+<!-- File Tree -->
+<div class="flex flex-col text-sm">
+<!-- Header row -->
+<div class="grid grid-cols-12 px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+<div class="col-span-8">File / Folder</div>
+<div class="col-span-2 text-right">Size</div>
+<div class="col-span-2 text-right">Tokens</div>
+</div>
+<!-- Row 1: Root Folder (Open) -->
+<div class="group flex items-center hover:bg-white/5 rounded-md transition-colors px-2 py-2 cursor-pointer">
+<div class="flex-1 flex items-center gap-2">
+<input checked="" class="rounded border-slate-600 bg-transparent text-primary focus:ring-0 focus:ring-offset-0" disabled="" type="checkbox"/>
+<span class="material-symbols-outlined text-slate-400 text-[20px]">expand_more</span>
+<span class="material-symbols-outlined text-blue-400 text-[20px]">folder</span>
+<span class="text-white font-medium">src</span>
+</div>
+</div>
+<!-- Row 2: Nested File -->
+<div class="grid grid-cols-12 items-center hover:bg-white/5 rounded-md transition-colors px-2 py-2 cursor-pointer group">
+<div class="col-span-8 flex items-center gap-2 pl-10">
+<input checked="" class="rounded border-slate-600 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 border-2 h-4 w-4" type="checkbox"/>
+<span class="material-symbols-outlined text-yellow-400 text-[18px]">description</span>
+<span class="text-slate-300 group-hover:text-white transition-colors">index.ts</span>
+</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">2.4kb</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">450</div>
+</div>
+<!-- Row 3: Nested File -->
+<div class="grid grid-cols-12 items-center hover:bg-white/5 rounded-md transition-colors px-2 py-2 cursor-pointer group">
+<div class="col-span-8 flex items-center gap-2 pl-10">
+<input checked="" class="rounded border-slate-600 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 border-2 h-4 w-4" type="checkbox"/>
+<span class="material-symbols-outlined text-blue-300 text-[18px]">description</span>
+<span class="text-slate-300 group-hover:text-white transition-colors">utils.ts</span>
+</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">1.2kb</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">210</div>
+</div>
+<!-- Row 4: Config File -->
+<div class="grid grid-cols-12 items-center hover:bg-white/5 rounded-md transition-colors px-2 py-2 cursor-pointer group mt-1">
+<div class="col-span-8 flex items-center gap-2 pl-2">
+<input checked="" class="rounded border-slate-600 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 border-2 h-4 w-4" type="checkbox"/>
+<div class="w-6 flex justify-center"><span class="material-symbols-outlined text-red-400 text-[18px]">data_object</span></div>
+<span class="text-slate-300 group-hover:text-white transition-colors">package.json</span>
+</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">1kb</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">150</div>
+</div>
+<!-- Row 5: Ignored Folder -->
+<div class="grid grid-cols-12 items-center hover:bg-white/5 rounded-md transition-colors px-2 py-2 cursor-pointer group opacity-50">
+<div class="col-span-8 flex items-center gap-2 pl-2">
+<input class="rounded border-slate-600 bg-transparent text-primary focus:ring-0 focus:ring-offset-0 border-2 h-4 w-4" type="checkbox"/>
+<span class="material-symbols-outlined text-slate-500 text-[20px]">folder</span>
+<span class="text-slate-400 group-hover:text-white transition-colors">node_modules</span>
+</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">45mb</div>
+<div class="col-span-2 text-right text-slate-500 font-mono text-xs">-</div>
+</div>
+</div>
+</div>
+<div class="bg-[#131315] border-t border-border-dark px-5 py-3 flex justify-between items-center">
+<span class="text-xs text-slate-400">~810 tokens selected</span>
+<button class="flex items-center justify-center h-9 px-4 bg-white/5 border border-white/10 hover:bg-white/10 text-white rounded-md text-sm font-medium transition-colors gap-2">
+<span>Analyze Selected Files</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- AI Output / Markdown Editor Split View -->
+<section class="w-full max-w-[1400px] px-6 pb-20 flex-1 flex flex-col min-h-[600px]">
+<div class="flex items-center gap-4 mb-6">
+<div class="h-px bg-border-dark flex-1"></div>
+<h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest">Workspace</h3>
+<div class="h-px bg-border-dark flex-1"></div>
+</div>
+<!-- Toolbar -->
+<div class="w-full bg-surface-dark border border-border-dark border-b-0 rounded-t-xl px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-white font-mono text-sm">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">markdown</span>
+                        README.md
+                    </div>
+<span class="text-xs px-2 py-0.5 rounded bg-green-500/10 text-green-400 border border-green-500/20">Generated</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors tooltip-trigger" title="Copy to Clipboard">
+<span class="material-symbols-outlined text-[20px]">content_copy</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors" title="Download">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+<div class="w-px h-4 bg-border-dark mx-1"></div>
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 rounded-md transition-colors border border-transparent hover:border-primary/20">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+                        Regenerate
+                    </button>
+</div>
+</div>
+<!-- Editor Split View -->
+<div class="flex-1 w-full border border-border-dark rounded-b-xl overflow-hidden flex flex-col md:flex-row bg-[#0e0e10]">
+<!-- Left Pane: Editor -->
+<div class="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-border-dark flex flex-col">
+<div class="flex-1 p-4 font-mono text-sm overflow-y-auto bg-[#0e0e10] text-slate-300 leading-relaxed editor-line-numbers">
+<div class="editor-line"><span class="text-primary font-bold"># Platform UI</span></div>
+<div class="editor-line"></div>
+<div class="editor-line">A modern, component-based UI library for building high-quality web applications.</div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-primary font-bold">## Features</span></div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-yellow-400">-</span> ⚡️ <span class="text-white font-bold">Fast:</span> Built on top of Vite and Tailwind CSS.</div>
+<div class="editor-line"><span class="text-yellow-400">-</span> ♿️ <span class="text-white font-bold">Accessible:</span> Adheres to WAI-ARIA standards.</div>
+<div class="editor-line"><span class="text-yellow-400">-</span> 🎨 <span class="text-white font-bold">Themable:</span> Easy customization via CSS variables.</div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-primary font-bold">## Installation</span></div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-slate-500">```bash</span></div>
+<div class="editor-line"><span class="text-green-400">npm</span> install @ui-labs/platform</div>
+<div class="editor-line"><span class="text-slate-500">```</span></div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-primary font-bold">## Usage</span></div>
+<div class="editor-line"></div>
+<div class="editor-line">Import components directly into your React project:</div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-slate-500">```tsx</span></div>
+<div class="editor-line"><span class="text-purple-400">import</span> { Button } <span class="text-purple-400">from</span> <span class="text-green-300">'@ui-labs/platform'</span>;</div>
+<div class="editor-line"></div>
+<div class="editor-line"><span class="text-purple-400">export default</span> <span class="text-blue-400">function</span> <span class="text-yellow-300">App</span>() {</div>
+<div class="editor-line"> <span class="text-purple-400">return</span> (</div>
+<div class="editor-line">    &lt;<span class="text-yellow-300">Button</span> variant=<span class="text-green-300">"primary"</span>&gt;Click me&lt;/<span class="text-yellow-300">Button</span>&gt;</div>
+<div class="editor-line">  );</div>
+<div class="editor-line">}</div>
+<div class="editor-line"><span class="text-slate-500">```</span></div>
+<div class="editor-line"><span class="animate-pulse border-r-2 border-primary h-4 w-1 inline-block align-middle ml-1"></span></div>
+</div>
+</div>
+<!-- Right Pane: Preview -->
+<div class="w-full md:w-1/2 bg-[#0c0c0d] p-8 overflow-y-auto">
+<article class="prose prose-invert prose-sm max-w-none">
+<h1 class="text-3xl font-bold text-white mb-4 border-b border-border-dark pb-2">Platform UI</h1>
+<p class="text-slate-300 mb-6">A modern, component-based UI library for building high-quality web applications.</p>
+<h2 class="text-xl font-bold text-white mb-3 mt-8">Features</h2>
+<ul class="list-disc pl-5 space-y-2 text-slate-300 mb-6">
+<li>⚡️ <strong class="text-white">Fast:</strong> Built on top of Vite and Tailwind CSS.</li>
+<li>♿️ <strong class="text-white">Accessible:</strong> Adheres to WAI-ARIA standards.</li>
+<li>🎨 <strong class="text-white">Themable:</strong> Easy customization via CSS variables.</li>
+</ul>
+<h2 class="text-xl font-bold text-white mb-3 mt-8">Installation</h2>
+<div class="bg-[#1e1e20] rounded-lg p-4 mb-6 border border-border-dark font-mono text-sm">
+<span class="text-green-400">npm</span> install @ui-labs/platform
+                        </div>
+<h2 class="text-xl font-bold text-white mb-3 mt-8">Usage</h2>
+<p class="text-slate-300 mb-4">Import components directly into your React project:</p>
+<div class="bg-[#1e1e20] rounded-lg p-4 border border-border-dark font-mono text-sm overflow-x-auto">
+<span class="text-purple-400">import</span> { Button } <span class="text-purple-400">from</span> <span class="text-green-300">'@ui-labs/platform'</span>;<br/><br/>
+<span class="text-purple-400">export default</span> <span class="text-blue-400">function</span> <span class="text-yellow-300">App</span>() {<br/>
+                              <span class="text-purple-400">return</span> (<br/>
+                                &lt;<span class="text-yellow-300">Button</span> variant=<span class="text-green-300">"primary"</span>&gt;Click me&lt;/<span class="text-yellow-300">Button</span>&gt;<br/>
+                              );<br/>
+                            }
+                        </div>
+</article>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full border-t border-border-dark bg-background-dark py-8 mt-auto">
+<div class="max-w-[1400px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex items-center gap-2 text-slate-500 text-sm">
+<span>© 2023 AI README Gen</span>
+<span class="mx-2">•</span>
+<a class="hover:text-white transition-colors" href="#">Privacy</a>
+<span class="mx-2">•</span>
+<a class="hover:text-white transition-colors" href="#">Terms</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="text-slate-500 hover:text-white transition-colors" href="#">
+<svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path>
+</svg>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

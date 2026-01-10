@@ -1,68 +1,32 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@custom-variant dark (&:where(.dark,.dark *));
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+    font-family: "monospace";
+    src: url("/fonts/Monospace.ttf");
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+@theme {
+  --color-primary: #25aff3;
+  --color-primary-hover: #1796d4;
+  --color-bg-dark: #0c0c0d;
+  --color-text-dark: #f0f2f5;
+  --color-text-muted-dark: #94a3b8;
+  --color-surface-primary-dark: #131315;
+  --color-surface-secondary-dark: #18181a;
+  --color-surface-secondary-hover-dark: #242426;
+  --color-border-dark: #27272a;
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  --color-bg-light: #f8fafc; 
+  --color-text-light: #0f172a; 
+  --color-text-muted-light: #64748b; 
+  --color-surface-primary-light: #ffffff; 
+  --color-surface-secondary-light: #f1f5f9; 
+  --color-surface-secondary-hover-light: #e2e8f0;
+  --color-border-light: #e5e7eb;
+  
+  --font-code: "monospace";
+  
+  --breakpoint-xs:30rem;
 }
