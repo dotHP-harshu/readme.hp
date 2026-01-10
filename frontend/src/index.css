@@ -30,3 +30,23 @@
   
   --breakpoint-xs:30rem;
 }
+
+
+.scroller::-webkit-scrollbar{
+  width: 5px;
+}
+.scroller::-webkit-scrollbar-thumb{
+  width: 10px;
+  background-color: #0d8ccb93 ;
+  border-radius: 10px ;
+  cursor: pointer;
+  transition: all;
+  transition-duration: 0.5s;
+}
+.scroller::-webkit-scrollbar-thumb:hover{
+  background-color: #1796d4 ;
+}
+.scroller::-webkit-scrollbar-track{
+  padding: 4px;
+  background: transparent;
+}
