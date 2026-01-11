@@ -9,7 +9,7 @@ import {
   WandSparkles,
 } from "lucide-react";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
 import { getRepoTreeApi } from "../api/githubApi";
 import type { fileTreeElement } from "../types/types";
@@ -36,17 +36,25 @@ function MainHero() {
     return shuffleArray(PATH_COLORS);
   }, []);
 
+  const [inputUrl, setInputUrl] = useState<string>("");
+
   const [impRepoFiles, setImpRepoFiles] = useState<fileTreeElement[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
   const [repoError, setrepoError] = useState<string>("");
-  const [urlError, seturlError] = useState("");
+
+  const handleUrlSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputUrl.trim() === "") return;
+    getRepoTree(inputUrl);
+
+  };
 
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
 
-  const getRepoTree = useCallback(async () => {
+  const getRepoTree = useCallback(async (url:string) => {
     setrepoError("");
     setIsLoadingFiles(true);
-    const { data, error } = await getRepoTreeApi("");
+    const { data, error } = await getRepoTreeApi(url);
 
     if (error) {
       setIsLoadingFiles(false);
@@ -57,6 +65,7 @@ function MainHero() {
       const impFiles = makeImpFileArray(data);
       setImpRepoFiles(impFiles);
       setSelectedPaths(new Set(impFiles.map((f) => f.path)));
+      setInputUrl("")
     }
     setIsLoadingFiles(false);
     setrepoError("");
@@ -78,10 +87,6 @@ function MainHero() {
     return selectedFiles.reduce((sum, f) => sum + (f.size ?? 0), 0);
   }, [selectedFiles]);
 
-  useEffect(() => {
-    getRepoTree();
-  }, []);
-
   return (
     <>
       <div className="flex justify-center items-center flex-col min-h-[70dvh] space-y-6 px-6 ">
@@ -101,17 +106,32 @@ function MainHero() {
           document your codebase in seconds.
         </p>
 
-        <form className=" max-w-2xl w-full space-y-2">
-          <div className="bg-surface-primary-light dark:bg-surface-primary-dark flex items-stretch gap-4 w-full px-4 py-3 max-xs:px-2 max-xs:py-1.5 border-2 border-border-light dark:border-border-dark rounded-lg overflow-hidden focus-within:border-primary-hover shadow-sm focus-within:shadow-primary transition-all duration-200">
+        <form
+          onSubmit={handleUrlSubmit}
+          className=" max-w-2xl w-full space-y-2"
+        >
+          <div
+            className={`${
+              repoError === "Invalid repo url."
+                ? "border-red-500 focus-within:border-red-500  focus-within:shadow-red-400/50 "
+                : "border-border-light dark:border-border-dark focus-within:border-primary-hover shadow-sm focus-within:shadow-primary "
+            }
+            bg-surface-primary-light dark:bg-surface-primary-dark flex items-stretch gap-4 w-full px-4 py-3 max-xs:px-2 max-xs:py-1.5 border-2 rounded-lg overflow-hidden shadow-sm
+            `}
+          >
             <div className="flex justify-center items-center ">
               <Link2 className="text-text-muted-light dark:text-text-muted-dark" />
             </div>
             <input
               type="text"
+              value={inputUrl}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setInputUrl(e.target.value)
+              }
               className="flex-1 w-full outline-none bg-transparent px-2 font-code placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark text-base"
               placeholder="https://github.com/username/project"
             />
-            <button className="bg-primary flex justify-center items-center gap-2 px-4 py-1 rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
+            <button className="bg-primary flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
               <WandSparkles strokeWidth={1.25} />{" "}
               <span className="text-lg font-semibold tracking-normal max-sm:hidden">
                 Generate
