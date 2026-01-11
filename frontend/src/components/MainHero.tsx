@@ -14,6 +14,7 @@ import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
 import { getRepoTreeApi } from "../api/githubApi";
 import type { fileTreeElement } from "../types/types";
 import RepoFileItem from "./RepoFileSelection/RepoFileItem";
+import FileAnaSection from "./MainHero/FileAnaSection";
 
 const PATH_COLORS = [
   "#FF9F1C", // mango
@@ -32,37 +33,40 @@ const PATH_COLORS = [
 // https://api.github.com/repos/[USER]/[REPO]/git/trees/[BRANCH]?recursive=1
 
 function MainHero() {
-  const pathColors = useMemo(() => {
-    return shuffleArray(PATH_COLORS);
-  }, []);
-
+  
+  
   const [inputUrl, setInputUrl] = useState<string>("");
-
+  const [repoDetail, setRepoDetail] = useState({username:"username", repo:"repo", branch:"main"})
   const [impRepoFiles, setImpRepoFiles] = useState<fileTreeElement[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
   const [repoError, setrepoError] = useState<string>("");
+  const [isShowingFileContentSection , setIsShowingFileContentSection ] = useState<boolean>(false)
 
   const handleUrlSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputUrl.trim() === "") return;
     getRepoTree(inputUrl);
-
+    
   };
-
+  
+  
+  
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
-
+  
   const getRepoTree = useCallback(async (url:string) => {
     setrepoError("");
     setIsLoadingFiles(true);
     const { data, error } = await getRepoTreeApi(url);
-
+    
     if (error) {
       setIsLoadingFiles(false);
       return setrepoError(error);
     }
-
-    if (data && Array.isArray(data)) {
-      const impFiles = makeImpFileArray(data);
+    
+    if (typeof data === "object") {
+      const d = data as {username:string, repo:string, branch:string, fileArray: fileTreeElement[]}
+      setRepoDetail({username:d.username, repo:d.repo, branch:d.branch})
+      const impFiles = makeImpFileArray(d.fileArray);
       setImpRepoFiles(impFiles);
       setSelectedPaths(new Set(impFiles.map((f) => f.path)));
       setInputUrl("")
@@ -70,7 +74,7 @@ function MainHero() {
     setIsLoadingFiles(false);
     setrepoError("");
   }, []);
-
+  
   const toggleFile = useCallback((path: string) => {
     setSelectedPaths((prev) => {
       const next = new Set(prev);
@@ -78,7 +82,10 @@ function MainHero() {
       return next;
     });
   }, []);
-
+  
+  const pathColors = useMemo(() => {
+    return shuffleArray(PATH_COLORS);
+  }, []);
   const selectedFiles = useMemo(() => {
     return impRepoFiles.filter((f) => selectedPaths.has(f.path));
   }, [selectedPaths, impRepoFiles]);
@@ -131,7 +138,7 @@ function MainHero() {
               className="flex-1 w-full outline-none bg-transparent px-2 font-code placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark text-base"
               placeholder="https://github.com/username/project"
             />
-            <button className="bg-primary flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
+            <button className="bg-primary flex justify-center select-none items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
               <WandSparkles strokeWidth={1.25} />{" "}
               <span className="text-lg font-semibold tracking-normal max-sm:hidden">
                 Generate
@@ -147,7 +154,7 @@ function MainHero() {
         </form>
       </div>
       {/* Repository file selection starts  */}
-      <div className="flex justify-center items-center mt-10 relative z-10">
+      <div className="flex justify-center items-center mt-10 relative z-10 px-4">
         <div className="overflow-hidden border-2 border-border-light dark:border-border-dark max-w-3xl w-full rounded-lg">
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div className="flex justify-center items-center gap-2">
@@ -156,7 +163,7 @@ function MainHero() {
             </div>
             <div>
               <small className="font-code text-text-muted-light dark:text-text-muted-dark">
-                github.com/username/project
+                github.com/{repoDetail.username}/{repoDetail.repo}
               </small>
             </div>
           </div>
@@ -221,7 +228,7 @@ function MainHero() {
               </small>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <button className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
+              <button disabled={selectedFiles.length === 0 } onClick={()=>setIsShowingFileContentSection(true)} className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
                 <span className="text-base font-semibold tracking-tight">
                   Analyze Selected Files
                 </span>
@@ -232,6 +239,10 @@ function MainHero() {
         </div>
       </div>
       {/* Repository file selection ends */}
+
+      {
+        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail}/>
+      }
     </>
   );
 }

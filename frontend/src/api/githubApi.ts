@@ -32,7 +32,7 @@ export const getRepoTreeApi = async (
       `https://api.github.com/repos/${username}/${repo}/git/trees/${branch}?recursive=1`
     );
     if (data.data) {
-      return { data: data?.data?.tree, error: null };
+      return { data: {fileArray:data?.data?.tree , username, repo, branch}, error: null };
     }
     return { data: null, error: "Error on getting the repo tree." };
   } catch (error) {
