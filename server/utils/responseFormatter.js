@@ -8,8 +8,7 @@ function formatResponse(success, data = null, message = null) {
 }
 
 // Specialized error formatter
-function formatError(error, code = 500, ) {
-  let message = "An unexpected error occurred";
+function formatError(error = null, message = "An unexpected error occurred", code = 500,) {
 
   // If error is an Error object, extract message
   if (error instanceof Error) {

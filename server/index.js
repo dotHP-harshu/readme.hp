@@ -1,7 +1,14 @@
 require("dotenv").config()
 const express = require("express");
 const app = express()
+const cors = require("cors")
 const GithubRoutes = require("./routes/github.route");
+
+
+app.use(cors({credentials:true, origin:process.env.CLIENT_URL}))
+app.use(express.urlencoded({extended:true}))
+app.use(express.json())
+
 
 app.use("/github", GithubRoutes)
 
