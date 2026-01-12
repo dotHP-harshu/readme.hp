@@ -16,6 +16,8 @@ import type { fileTreeElement } from "../types/types";
 import RepoFileItem from "./RepoFileSelection/RepoFileItem";
 import FileAnaSection from "./MainHero/FileAnaSection";
 
+const MAX_TOKEN_SIZE = 2; // in MB
+
 const PATH_COLORS = [
   "#FF9F1C", // mango
   "#FF6B6B", // watermelon
@@ -48,8 +50,6 @@ function MainHero() {
     getRepoTree(inputUrl);
     
   };
-  
-  
   
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
   
@@ -218,7 +218,11 @@ function MainHero() {
 
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div>
-              <small className="font-code text-text-muted-light dark:text-text-muted-dark">
+              <small className={
+                `${totalSizeOfSelectedFiles / Math.pow(1024,2) > MAX_TOKEN_SIZE ? "text-red-500" : "text-text-muted-light dark:text-text-muted-dark"}
+                font-code 
+                `
+              }>
                 {`~ ${
                   totalSizeOfSelectedFiles / 1024 < 1024
                     ? `${(totalSizeOfSelectedFiles / 1024).toFixed(2)} Kb`
@@ -229,7 +233,7 @@ function MainHero() {
               </small>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <button disabled={selectedFiles.length === 0 } onClick={()=>setIsShowingFileContentSection(true)} className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
+              <button disabled={selectedFiles.length === 0 || totalSizeOfSelectedFiles / Math.pow(1024,2) > MAX_TOKEN_SIZE} onClick={()=>setIsShowingFileContentSection(true)} className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
                 <span className="text-base font-semibold tracking-tight">
                   Analyze Selected Files
                 </span>
