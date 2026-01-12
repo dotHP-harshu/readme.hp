@@ -9,7 +9,7 @@ import {
   WandSparkles,
 } from "lucide-react";
 
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
 import { getRepoTreeApi } from "../api/githubApi";
 import type { fileTreeElement } from "../types/types";
@@ -37,7 +37,7 @@ function MainHero() {
   
   const [inputUrl, setInputUrl] = useState<string>("");
   const [repoDetail, setRepoDetail] = useState({username:"username", repo:"repo", branch:"main"})
-  const [impRepoFiles, setImpRepoFiles] = useState<fileTreeElement[]>([]);
+  const [repoFiles, setRepoFiles] = useState<fileTreeElement[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
   const [repoError, setrepoError] = useState<string>("");
   const [isShowingFileContentSection , setIsShowingFileContentSection ] = useState<boolean>(false)
@@ -54,6 +54,7 @@ function MainHero() {
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
   
   const getRepoTree = useCallback(async (url:string) => {
+    // setRepoFiles([])
     setrepoError("");
     setIsLoadingFiles(true);
     const { data, error } = await getRepoTreeApi(url);
@@ -66,8 +67,8 @@ function MainHero() {
     if (typeof data === "object") {
       const d = data as {username:string, repo:string, branch:string, fileArray: fileTreeElement[]}
       setRepoDetail({username:d.username, repo:d.repo, branch:d.branch})
+      setRepoFiles(d.fileArray.filter((f)=>f.type !== "tree" ));
       const impFiles = makeImpFileArray(d.fileArray);
-      setImpRepoFiles(impFiles);
       setSelectedPaths(new Set(impFiles.map((f) => f.path)));
       setInputUrl("")
     }
@@ -87,8 +88,8 @@ function MainHero() {
     return shuffleArray(PATH_COLORS);
   }, []);
   const selectedFiles = useMemo(() => {
-    return impRepoFiles.filter((f) => selectedPaths.has(f.path));
-  }, [selectedPaths, impRepoFiles]);
+    return repoFiles.filter((f) => selectedPaths.has(f.path));
+  }, [selectedPaths]);
 
   const totalSizeOfSelectedFiles = useMemo(() => {
     return selectedFiles.reduce((sum, f) => sum + (f.size ?? 0), 0);
@@ -192,7 +193,7 @@ function MainHero() {
                 </div>
               )}
 
-              {!isLoadingFiles && !repoError && impRepoFiles.length === 0 && (
+              {!isLoadingFiles && !repoError && repoFiles.length === 0 && (
                 <div className="flex flex-col gap-4 justify-center items-center w-full min-h-[20vh]">
                   <AlertCircle className="text-text-muted-light dark:text-text-muted-dark" />
                   <p className="text-text-muted-light dark:text-text-muted-dark max-w-xl text-center ">
@@ -201,9 +202,9 @@ function MainHero() {
                 </div>
               )}
 
-              {impRepoFiles &&
-                impRepoFiles.length > 0 &&
-                impRepoFiles.map((file) => (
+              {repoFiles &&
+                repoFiles.length > 0 &&
+                repoFiles.map((file) => (
                   <RepoFileItem
                     key={file.path}
                     file={file}
