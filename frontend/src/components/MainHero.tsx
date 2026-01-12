@@ -54,7 +54,7 @@ function MainHero() {
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
   
   const getRepoTree = useCallback(async (url:string) => {
-    // setRepoFiles([])
+    setRepoFiles([])
     setrepoError("");
     setIsLoadingFiles(true);
     const { data, error } = await getRepoTreeApi(url);
