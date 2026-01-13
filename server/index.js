@@ -3,6 +3,7 @@ const express = require("express");
 const app = express()
 const cors = require("cors")
 const GithubRoutes = require("./routes/github.route");
+const AiRouter = require("./routes/ai.route");
 
 
 app.use(cors({credentials:true, origin:process.env.CLIENT_URL}))
@@ -11,6 +12,7 @@ app.use(express.json())
 
 
 app.use("/github", GithubRoutes)
+app.use("/ai", AiRouter)
 
 app.get("/", (req, res)=>{
     res.send(`Welcome to the readme.hp server.`)
