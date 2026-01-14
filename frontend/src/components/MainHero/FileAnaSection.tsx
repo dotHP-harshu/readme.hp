@@ -8,10 +8,12 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getRepoContentApi } from "../../api/serverApi";
+import type { fileTreeElement } from "../../types/types";
 
 interface FileAnaSectionProps {
   hideSection: () => void;
   files: string[];
+  repoFiles: fileTreeElement[];
   repoDetail: { username: string; repo: string; branch: string };
 }
 
@@ -19,15 +21,16 @@ function FileAnaSection({
   hideSection,
   files,
   repoDetail,
+  repoFiles,
 }: FileAnaSectionProps) {
   const [successfullFiles, setSuccessfullFiles] = useState<string[]>([]);
   const [unsuccessfullFiles, setUnsuccessfullFiles] = useState<string[]>([]);
   const [isAnalysingFiles, setIsAnalysingFiles] = useState<boolean>(true);
-  const [analyseError , setAnalyseError ] = useState<string>("")
-  const [fileContent , setFileContent ] = useState<string>("")
+  const [analyseError, setAnalyseError] = useState<string>("");
+  const [fileContent, setFileContent] = useState<string>("");
 
   const analyseFiles = async () => {
-    setAnalyseError("")
+    setAnalyseError("");
     const { data, error } = await getRepoContentApi(
       files,
       repoDetail.username,
@@ -35,9 +38,9 @@ function FileAnaSection({
       repoDetail.branch
     );
 
-    if(error ){
-        setIsAnalysingFiles(false)
-        return setAnalyseError(error)
+    if (error) {
+      setIsAnalysingFiles(false);
+      return setAnalyseError(error);
     }
     if (data) {
       const d = data as {
@@ -45,19 +48,22 @@ function FileAnaSection({
         unsuccessfullFiles: string[];
         content: string;
       };
-      setFileContent(d.content)
+      const repoPathsString = repoFiles.reduce((p, f) => p + `${f.path}\n`, "");
+      const newContent = repoPathsString + d.content;
+      setFileContent(newContent);
+
       setUnsuccessfullFiles(d.unsuccessfullFiles);
       setSuccessfullFiles(d.successfullFiles);
-      setIsAnalysingFiles(false)
+      setIsAnalysingFiles(false);
     }
   };
 
-  const handleGenerate = (content:string)=>{
-    console.log(content)
-  }
+  const handleGenerate = (content: string) => {
+    console.log(content);
+  };
 
   useEffect(() => {
-    analyseFiles()
+    analyseFiles();
   }, []);
 
   return (
@@ -73,10 +79,8 @@ function FileAnaSection({
         </button>
         {!isAnalysingFiles && analyseError !== "" && (
           <div className="flex justify-center items-center flex-col gap-6">
-           <AlertTriangle className="text-red-500" />
-                  <p className="text-red-500 max-w-xl text-center">
-                    {analyseError}
-                  </p>
+            <AlertTriangle className="text-red-500" />
+            <p className="text-red-500 max-w-xl text-center">{analyseError}</p>
           </div>
         )}
         {isAnalysingFiles && (
@@ -125,7 +129,10 @@ function FileAnaSection({
               <p className="text-text-muted-light dark:text-text-muted-dark text-sm font-mono tracking-tight">
                 ~{successfullFiles.length} files read.
               </p>
-              <button onClick={()=>handleGenerate(fileContent)} className="bg-primary select-none flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
+              <button
+                onClick={() => handleGenerate(fileContent)}
+                className="bg-primary select-none flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200"
+              >
                 <WandSparkles strokeWidth={1.25} />
                 <span className="text-lg font-semibold tracking-normal max-sm:hidden">
                   Generate

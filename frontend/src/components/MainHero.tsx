@@ -246,7 +246,7 @@ function MainHero() {
       {/* Repository file selection ends */}
 
       {
-        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail}/>
+        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail} repoFiles={repoFiles}/>
       }
     </>
   );

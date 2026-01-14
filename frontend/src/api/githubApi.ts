@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 interface RepoTreeResponseInterface {
   data: object | null;
@@ -16,15 +16,24 @@ export const getRepoTreeApi = async (
 
   let [, username, repo, branch] = match;
 
-  if (!branch) {
-    try {
-      const { data: repoMeta } = await axios.get(
-        `https://api.github.com/repos/${username}/${repo}`
-      );
-      branch = repoMeta.default_branch;
-    } catch (err) {
-      return { data: null, error: "Failed to fetch default branch." };
+  try {
+    const { data: repoMeta } = await axios.get(
+      `https://api.github.com/repos/${username}/${repo}`
+    );
+
+    branch = repoMeta.default_branch;
+  } catch (error) {
+    console.log(error);
+    if (error instanceof AxiosError) {
+      return {
+        data: null,
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          "Error while getting the brach",
+      };
     }
+    return { data: null, error: "Failed to fetch default branch. error is" };
   }
 
   try {
@@ -32,12 +41,18 @@ export const getRepoTreeApi = async (
       `https://api.github.com/repos/${username}/${repo}/git/trees/${branch}?recursive=1`
     );
     if (data.data) {
-      return { data: {fileArray:data?.data?.tree , username, repo, branch}, error: null };
+      return {
+        data: { fileArray: data?.data?.tree, username, repo, branch },
+        error: null,
+      };
     }
     return { data: null, error: "Error on getting the repo tree." };
   } catch (error) {
     const err = error as Error;
     console.log(err);
-    return { data: null, error: err.message || "Error on getting the repo tree (catched)." };
+    return {
+      data: null,
+      error: err.message || "Error on getting the repo tree (catched).",
+    };
   }
 };
