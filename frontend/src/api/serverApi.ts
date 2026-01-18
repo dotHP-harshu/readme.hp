@@ -9,9 +9,9 @@ const api = axios.create({
 type Methods = "GET" | "POST";
 
 interface ApiResponseInterface<T> {
-    success:boolean
-    message:string,
-    data: T | null
+  success: boolean;
+  message: string;
+  data: T | null;
 }
 
 interface ResponseInterface<T> {
@@ -22,11 +22,12 @@ interface ResponseInterface<T> {
 const request = async <T>(
   method: Methods,
   url: string,
-  data:any = null
+  data: any = null,
 ): Promise<ResponseInterface<T>> => {
-    console.log({url,method})
+  console.log({ url, method });
   try {
     const res = await api<ApiResponseInterface<T>>({ method, data, url });
+    console.log(res)
     if (res.data.success) {
       return { data: res.data.data, error: null };
     }
@@ -40,5 +41,21 @@ const request = async <T>(
 };
 
 export const getRepoContentApi = async (
-  fileArray: string[], username:string, repo:string, branch:string
-) => await request<object>("POST", "/github/content", {fileArray, username, repo, branch});
+  fileArray: string[],
+  username: string,
+  repo: string,
+  branch: string,
+) =>
+  await request<object>("POST", "/github/content", {
+    fileArray,
+    username,
+    repo,
+    branch,
+  });
+
+export const getReadmeApi = (content: string) => {
+  const blob = new Blob([content], { type: "text/plain" });
+  const formData = new FormData();
+  formData.append("file", blob, "codebase.txt");
+  return request<object>("POST", "/ai/readme", formData);
+};

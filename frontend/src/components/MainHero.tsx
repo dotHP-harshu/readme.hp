@@ -14,7 +14,7 @@ import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
 import { getRepoTreeApi } from "../api/githubApi";
 import type { fileTreeElement } from "../types/types";
 import RepoFileItem from "./RepoFileSelection/RepoFileItem";
-import FileAnaSection from "./MainHero/FileAnaSection";
+import FileAnaSection from "./Main/FileAnaSection";
 
 const MAX_TOKEN_SIZE = 2; // in MB
 
@@ -34,7 +34,11 @@ const PATH_COLORS = [
 // get files
 // https://api.github.com/repos/[USER]/[REPO]/git/trees/[BRANCH]?recursive=1
 
-function MainHero() {
+interface MainHeroProps{
+  handleGenerate: (content:string) => void
+}
+
+function MainHero({handleGenerate}: MainHeroProps) {
   
   
   const [inputUrl, setInputUrl] = useState<string>("");
@@ -246,8 +250,9 @@ function MainHero() {
       {/* Repository file selection ends */}
 
       {
-        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail} repoFiles={repoFiles}/>
+        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail} repoFiles={repoFiles} handleGenerate={handleGenerate}/>
       }
+      
     </>
   );
 }

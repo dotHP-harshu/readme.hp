@@ -7,19 +7,21 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getRepoContentApi } from "../../api/serverApi";
+import {  getReadmeApi, getRepoContentApi } from "../../api/serverApi";
 import type { fileTreeElement } from "../../types/types";
 
 interface FileAnaSectionProps {
   hideSection: () => void;
   files: string[];
   repoFiles: fileTreeElement[];
+  handleGenerate: (content:string) => void
   repoDetail: { username: string; repo: string; branch: string };
 }
 
 function FileAnaSection({
   hideSection,
   files,
+  handleGenerate,
   repoDetail,
   repoFiles,
 }: FileAnaSectionProps) {
@@ -58,9 +60,7 @@ function FileAnaSection({
     }
   };
 
-  const handleGenerate = (content: string) => {
-    console.log(content);
-  };
+ 
 
   useEffect(() => {
     analyseFiles();
