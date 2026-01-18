@@ -10,11 +10,11 @@ import {
 } from "lucide-react";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { makeImpFileArray, shuffleArray } from "../utils/MainHeroUtil";
-import { getRepoTreeApi } from "../api/githubApi";
-import type { fileTreeElement } from "../types/types";
-import RepoFileItem from "./RepoFileSelection/RepoFileItem";
-import FileAnaSection from "./Main/FileAnaSection";
+import { makeImpFileArray, shuffleArray } from "../../utils/MainHeroUtil";
+import { getRepoTreeApi } from "../../api/githubApi";
+import type { fileTreeElement } from "../../types/types";
+import RepoFileItem from "../RepoFileSelection/RepoFileItem";
+import FileAnaSection from "./FileAnaSection";
 
 const MAX_TOKEN_SIZE = 2; // in MB
 

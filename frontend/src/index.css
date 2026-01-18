@@ -3,8 +3,8 @@
 @custom-variant dark (&:where(.dark,.dark *));
 
 @font-face {
-    font-family: "monospace";
-    src: url("/fonts/Monospace.ttf");
+  font-family: "monospace";
+  src: url("/fonts/Monospace.ttf");
 }
 
 @theme {
@@ -18,35 +18,55 @@
   --color-surface-secondary-hover-dark: #242426;
   --color-border-dark: #27272a;
 
-  --color-bg-light: #f8fafc; 
-  --color-text-light: #0f172a; 
-  --color-text-muted-light: #64748b; 
-  --color-surface-primary-light: #ffffff; 
-  --color-surface-secondary-light: #f1f5f9; 
+  --color-bg-light: #f8fafc;
+  --color-text-light: #0f172a;
+  --color-text-muted-light: #64748b;
+  --color-surface-primary-light: #ffffff;
+  --color-surface-secondary-light: #f1f5f9;
   --color-surface-secondary-hover-light: #e2e8f0;
   --color-border-light: #e5e7eb;
-  
+
   --font-code: "monospace";
-  
-  --breakpoint-xs:30rem;
+
+  --breakpoint-xs: 30rem;
 }
 
-
-.scroller::-webkit-scrollbar{
+.scroller::-webkit-scrollbar {
   width: 5px;
 }
-.scroller::-webkit-scrollbar-thumb{
+.scroller::-webkit-scrollbar-thumb {
   width: 10px;
-  background-color: #0d8ccb93 ;
-  border-radius: 10px ;
+  background-color: #0d8ccb93;
+  border-radius: 10px;
   cursor: pointer;
   transition: all;
   transition-duration: 0.5s;
 }
-.scroller::-webkit-scrollbar-thumb:hover{
-  background-color: #1796d4 ;
+.scroller::-webkit-scrollbar-thumb:hover {
+  background-color: #1796d4;
 }
-.scroller::-webkit-scrollbar-track{
+.scroller::-webkit-scrollbar-track {
   padding: 4px;
   background: transparent;
+}
+
+.disable-tailwind {
+  font-family: inherit;
+}
+
+.disable-tailwind :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li) {
+  all: revert;
+}
+
+.hljs {
+  font-size: 0.875rem;
+  padding: 1rem;
+  border-radius: 0.50rem;
+  background: var(--color-surface-primary-light) !important;
+  color: var(--color-text-light) !important;
+}
+
+.dark .hljs {
+  background: var(--color-surface-secondary-dark) !important;
+  color: var(--color-text-dark) !important;
 }
