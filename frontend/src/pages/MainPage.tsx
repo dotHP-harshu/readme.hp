@@ -1,33 +1,36 @@
-import { useState } from "react"
-import GeneratingReadme from "../components/MainPage/GeneratingReadme"
-import MainHero from "../components/MainPage/MainHero"
+import { useState } from "react";
+import GeneratingReadme from "../components/MainPage/GeneratingReadme";
+import MainHero from "../components/MainPage/MainHero";
 import { getReadmeApi } from "../api/serverApi";
 import ReadmeSection from "../components/MainPage/ReadmeSection";
 
 function MainPage() {
-  const [isGenerating, setIsGenerating] = useState<boolean>(false)
-  
-   const handleGenerate = async (content: string) => {
-    setIsGenerating(true);
-      const { data, error } = await getReadmeApi(content);
-      if(error){
-        console.log(error)
-      }
-      if(data){
-        console.log(data)
-      }
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
+  const [readmeMarkdown, setReadmeMarkdown] = useState<string>("");
 
-      setIsGenerating(false);
-    };
-  
+  const handleGenerate = async (content: string) => {
+    setIsGenerating(true);
+    const { data, error } = await getReadmeApi(content);
+    if (error) {
+      console.log(error);
+    }
+    if (typeof data === "object") {
+      const res = data as { readme: string };
+      if (res.readme && typeof res.readme === "string") {
+        setReadmeMarkdown(res.readme);
+      }
+    }
+
+    setIsGenerating(false);
+  };
+
   return (
     <div>
-      <MainHero handleGenerate={handleGenerate}/>
+      <MainHero handleGenerate={handleGenerate} setReadmeMarkdown={setReadmeMarkdown} />
       {isGenerating && <GeneratingReadme />}
-      <ReadmeSection/>
-      
+      {readmeMarkdown && <ReadmeSection readmeMarkdown={readmeMarkdown}/>}
     </div>
   );
 }
 
-export default MainPage
+export default MainPage;

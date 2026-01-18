@@ -7,14 +7,14 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import {  getReadmeApi, getRepoContentApi } from "../../api/serverApi";
+import { getRepoContentApi } from "../../api/serverApi";
 import type { fileTreeElement } from "../../types/types";
 
 interface FileAnaSectionProps {
   hideSection: () => void;
   files: string[];
   repoFiles: fileTreeElement[];
-  handleGenerate: (content:string) => void
+  handleGenerate: (content: string) => void;
   repoDetail: { username: string; repo: string; branch: string };
 }
 
@@ -37,7 +37,7 @@ function FileAnaSection({
       files,
       repoDetail.username,
       repoDetail.repo,
-      repoDetail.branch
+      repoDetail.branch,
     );
 
     if (error) {
@@ -59,8 +59,6 @@ function FileAnaSection({
       setIsAnalysingFiles(false);
     }
   };
-
- 
 
   useEffect(() => {
     analyseFiles();
@@ -130,7 +128,10 @@ function FileAnaSection({
                 ~{successfullFiles.length} files read.
               </p>
               <button
-                onClick={() => handleGenerate(fileContent)}
+                onClick={() => {
+                  hideSection()
+                  handleGenerate(fileContent);
+                }}
                 className="bg-primary select-none flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200"
               >
                 <WandSparkles strokeWidth={1.25} />

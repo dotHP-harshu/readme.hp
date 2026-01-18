@@ -6,48 +6,20 @@ import "highlight.js/styles/github-dark.css";
 import { useState } from "react";
 import { Copy, CopyCheck } from "lucide-react";
 
-const markdown = `
-# Platform UI
-
-A modern, component-based UI library for building high-quality web applications.
-
-## Features
-
-- ⚡️ Fast: Built on top of Vite and Tailwind CSS.
-- ♿️ Accessible: Adheres to WAI-ARIA standards.
-- 🎨 Themable: Easy customization via CSS variables.
-
-## Installation
-
-\`\`\`bash
-npm install @ui-labs/platform
-\`\`\`
-
-## Usage
-
-Import components directly into your React project:
-
-\`\`\`tsx
-import { Button } from '@ui-labs/platform';
-export default function App() {
- return (
- <Button variant="primary">Click me</Button>
- );
+interface PropsInterface {
+  readmeMarkdown: string;
 }
-\`\`\`
-`;
-
-function ReadmeSection() {
+function ReadmeSection({ readmeMarkdown }: PropsInterface) {
   const [isShowingPreview, setIsShowingPreview] = useState<boolean>(true);
   const [isCopied, setIsCopied] = useState<boolean>(false);
 
   const copyMarkdown = async () => {
     try {
       if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(markdown);
+        await navigator.clipboard.writeText(readmeMarkdown);
       } else {
         const text = document.createElement("textarea");
-        text.value = markdown;
+        text.value = readmeMarkdown;
         text.style.position = "fixed";
         text.style.zIndex = "-9999";
         document.body.appendChild(text);
@@ -112,12 +84,12 @@ function ReadmeSection() {
                 rehypePlugins={[rehypeHighlight]}
                 remarkPlugins={[remarkGfm]}
               >
-                {markdown}
+                {readmeMarkdown}
               </Markdown>
             </div>
           ) : (
             <div className="markdown-code p-4">
-              <pre>{markdown}</pre>
+              <pre className="whitespace-break-spaces">{readmeMarkdown}</pre>
             </div>
           )}
         </div>

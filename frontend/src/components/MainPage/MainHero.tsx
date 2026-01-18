@@ -36,9 +36,10 @@ const PATH_COLORS = [
 
 interface MainHeroProps{
   handleGenerate: (content:string) => void
+  setReadmeMarkdown:(str:string)=>void
 }
 
-function MainHero({handleGenerate}: MainHeroProps) {
+function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
   
   
   const [inputUrl, setInputUrl] = useState<string>("");
@@ -50,6 +51,7 @@ function MainHero({handleGenerate}: MainHeroProps) {
 
   const handleUrlSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setReadmeMarkdown("")
     if (inputUrl.trim() === "") return;
     getRepoTree(inputUrl);
     
