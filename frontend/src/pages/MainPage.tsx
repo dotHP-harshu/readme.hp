@@ -3,6 +3,7 @@ import GeneratingReadme from "../components/MainPage/GeneratingReadme";
 import MainHero from "../components/MainPage/MainHero";
 import { getReadmeApi } from "../api/serverApi";
 import ReadmeSection from "../components/MainPage/ReadmeSection";
+import Footer from "../components/Footer";
 
 function MainPage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -29,6 +30,7 @@ function MainPage() {
       <MainHero handleGenerate={handleGenerate} setReadmeMarkdown={setReadmeMarkdown} />
       {isGenerating && <GeneratingReadme />}
       {readmeMarkdown && <ReadmeSection readmeMarkdown={readmeMarkdown}/>}
+      <Footer/>
     </div>
   );
 }
