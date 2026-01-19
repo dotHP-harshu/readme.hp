@@ -103,7 +103,7 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
 
   return (
     <>
-      <div className="flex justify-center items-center flex-col min-h-[70dvh] space-y-6 px-6 ">
+      <section className="flex justify-center items-center flex-col min-h-[70dvh] space-y-6 px-6 ">
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
@@ -159,9 +159,9 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
             </p>
           </div>
         </form>
-      </div>
+      </section>
       {/* Repository file selection starts  */}
-      <div className="flex justify-center items-center mt-10 relative z-10 px-4">
+      <section className="flex justify-center items-center my-10 relative z-10 px-4">
         <div className="overflow-hidden border-2 border-border-light dark:border-border-dark max-w-3xl w-full rounded-lg">
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div className="flex justify-center items-center gap-2">
@@ -248,7 +248,7 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
             </div>
           </div>
         </div>
-      </div>
+      </section>
       {/* Repository file selection ends */}
 
       {

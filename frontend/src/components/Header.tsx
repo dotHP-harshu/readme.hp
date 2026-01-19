@@ -1,12 +1,13 @@
 import { Moon, Star, Sun } from "lucide-react";
 import { useTheme } from "../context/ThemeProvider";
+import { useNavigate } from "react-router";
 
 function Header() {
   const { theme, toggleTheme } = useTheme();
-  console.log(theme);
+  const navigate = useNavigate()
   return (
     <div className="border-b-2 border-b-border-light dark:border-b-border-dark flex justify-between items-center py-4 px-20 max-xs:px-6 fixed top-0 left-0 z-99 w-full bg-bg-light/50 dark:bg-bg-dark/50 backdrop-blur-3xl">
-      <div className="text-xl flex justify-center items-center gap-0.5">
+      <div onClick={()=>navigate("/")} className="text-xl flex justify-center items-center gap-0.5 cursor-pointer select-none">
         <span className="font-code">readme</span>
         <span className="inline-block w-2 h-2 bg-primary rounded-full self-baseline-last -translate-y-1/2"></span>
         <span className="font-extrabold font-sans italic">hp</span>
@@ -18,7 +19,7 @@ function Header() {
         >
           {theme == "light" ? <Moon size={20} /> : <Sun size={20} />}
         </div>
-        <div className="">
+        <div className="select-none">
           <a
             href="https://github.com/dothp-harshu/readme.hp"
             target="_blank"

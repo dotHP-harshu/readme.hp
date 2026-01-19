@@ -1,6 +1,8 @@
 import { BadgeCheck, Zap } from "lucide-react";
+import { useNavigate } from "react-router";
 
 function HomeHero() {
+  const navigate = useNavigate()
   return (
     <section className="h-dvh w-full ">
       <div className="flex justify-center items-center flex-col h-full space-y-6 px-6 bg-linear-to-r from-primary/20 to-bg-light dark:to-bg-dark">
@@ -29,7 +31,7 @@ function HomeHero() {
           just paste your GitHub URL and watch the magic happen.
         </p>
         <div className="flex justify-center items-center flex-col gap-4">
-          <button className="bg-primary flex justify-center select-none items-center gap-2 px-4 py-2 outline-none rounded-lg cursor-pointer text-text-dark  hover:bg-primary-hover transition-colors duration-200">
+          <button onClick={()=>navigate("/generator")} className="bg-primary flex justify-center select-none items-center gap-2 px-4 py-2 outline-none rounded-lg cursor-pointer text-text-dark  hover:bg-primary-hover transition-colors duration-200">
             <Zap strokeWidth={1.25} size={16} />
             <span className="text-base font-semibold tracking-normal">
               Get Started

@@ -38,7 +38,7 @@ function ReadmeSection({ readmeMarkdown }: PropsInterface) {
   };
 
   return (
-    <div className="readme-section px-6 py-6">
+    <section className="readme-section px-6 py-6">
       {/* ----------------------- header start --------------------------------- */}
       <div className="readme-header flex justify-center items-center gap-4 my-10">
         <span className="flex-1 bg-linear-to-l from-text-muted-light dark:from-text-muted-dark to-transparent h-0.5 w-auto"></span>
@@ -94,7 +94,7 @@ function ReadmeSection({ readmeMarkdown }: PropsInterface) {
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -4,6 +4,7 @@ import MainHero from "../components/MainPage/MainHero";
 import { getReadmeApi } from "../api/serverApi";
 import ReadmeSection from "../components/MainPage/ReadmeSection";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 function MainPage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -26,12 +27,13 @@ function MainPage() {
   };
 
   return (
-    <div>
+    <main className="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
+      <Header/>
       <MainHero handleGenerate={handleGenerate} setReadmeMarkdown={setReadmeMarkdown} />
       {isGenerating && <GeneratingReadme />}
       {readmeMarkdown && <ReadmeSection readmeMarkdown={readmeMarkdown}/>}
       <Footer/>
-    </div>
+    </main>
   );
 }
 
