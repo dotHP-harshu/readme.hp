@@ -1,5 +1,6 @@
 import Header from "./components/Header"
 import ThemeProvider from "./context/ThemeProvider"
+import HomePage from "./pages/HomePage"
 import MainPage from "./pages/MainPage"
 
 function App() {
@@ -7,7 +8,7 @@ function App() {
     <ThemeProvider>
       <div className="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
       <Header/>
-      <MainPage/>
+      <HomePage/>
     </div>
     </ThemeProvider>
   )

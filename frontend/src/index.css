@@ -61,7 +61,7 @@
 .hljs {
   font-size: 0.875rem;
   padding: 1rem;
-  border-radius: 0.50rem;
+  border-radius: 0.5rem;
   background: var(--color-surface-primary-light) !important;
   color: var(--color-text-light) !important;
 }
