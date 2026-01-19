@@ -1,3 +1,4 @@
+import Footer from "../components/Footer";
 import DesignedFor from "../components/HomePage/DesignedFor";
 import Feature from "../components/HomePage/Feature";
 import HomeHero from "../components/HomePage/HomeHero";
@@ -16,6 +17,7 @@ function HomePage() {
           <Limitations />
         </div>
       </section>
+      <Footer/>
     </main>
   );
 }
