@@ -5,11 +5,11 @@ function normalizeCode(code) {
 }
 
 function writeAfile(file,content){
-  return`===File:${file}===\n===Content===\n${normalizeCode(content)}`
+  return`=== FILE START ===\n===File:${file}===\n===Content===\n${normalizeCode(content)}\n=== FILE END ===\n`
 }
 
 const formatContent=(dataArray) =>{
-    return dataArray.reduce((pre, f) => pre + writeAfile(f.value.path,f.value.content), "")
+   return dataArray.map((f)=> writeAfile(f.value.path,f.value.content))
 }
 
 module.exports = formatContent

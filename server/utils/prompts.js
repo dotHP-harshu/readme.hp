@@ -1,15 +1,4 @@
-This is a strong starting prompt, but it has one **critical flaw** regarding our workflow:
-
-**The Flaw:** This prompt expects the **raw code** (\`"You will receive the full serialized text..."\`).
-**The Reality:** In our optimized "Map-Reduce" workflow, this model will actually receive the **bullet-point summaries** (the \`[CHUNK ANALYSIS]\` outputs) from the previous step, not the raw files.
-
-If you feed it summaries but tell it to look for \`package.json\`, it might get confused because it won't see the actual file, just a note saying "Uses React."
-
-Here is the **Refined Master Prompt**. I have tweaked it to specifically ingest the **Chunk Analyses** and synthesize them into a cohesive document.
-
-### The "Reducer" Prompt (Final README Generator)
-
-\`\`\`markdown
+export const README_PROMPT = `
 ### SYSTEM INSTRUCTION: MASTER README GENERATOR
 **ROLE:** Senior Developer Advocate & Open Source Maintainer.
 **TASK:** Synthesize a set of **Codebase Analysis Notes** into a single, professional, production-ready \`README.md\`.
@@ -126,24 +115,26 @@ Distributed under the \`[Insert License]\` License.
 ---
 
 ### END OF INSTRUCTION
+`
 
-\`\`\`
 
-### Key Changes I Made (And Why):
+export const SUMMARY_PROMPT = `
+### SYSTEM INSTRUCTION: README EXTRACTOR
+**ROLE:** Expert Technical Writer & Systems Architect.
+**GOAL:** Analyze the provided code chunk to extract high-level metadata for a "Best-in-Class" README.
+**CONSTRAINT:** Be concise. Focus on *what* the code achieves, not *how* it is written. Ignore boilerplate, imports, and minor utility logic.
 
-1.  **Input Context Shift:** I changed "Inspect provided files" to **"Synthesize Codebase Analysis Notes."** This is crucial. The model needs to know it's looking at *metadata*, not code, so it doesn't try to "run" the text.
-2.  **Deduplication Logic:** I added the instruction: *"if 5 chunks say 'Uses React,' mention it once."* When processing chunks, repetition is the biggest enemy. This instruction fixes that.
-3.  **Variable Aggregation:** Instead of just listing variables, I asked for a **Table**. This forces the model to scan all chunks, collect every \`ENV_VAR\` it found, and present them in one clean place (a huge value-add for developers).
-4.  **Inferred Installation:** I instructed the model to **infer the install command** based on the stack it identifies in the notes (e.g., if it sees \`package.json\` mentioned in the notes, it knows to write \`npm install\`).
+**INPUT CONTEXT:** This is one chunk of a larger codebase. It may contain partial files.
 
-### How to use this:
+### ANALYSIS REQUIREMENT
+Output a strictly formatted summary containing ONLY the following data points found in this chunk. If a category is not present, omit it.
 
-1.  Run your script to get the chunks.
-2.  Run the **"Mapper"** prompt on each chunk.
-3.  Collect all the outputs into one big text file.
-4.  Paste this **"Master"** prompt at the top of that text file.
-5.  Send it to the model.
+1.  **Core Functionality:** (What specific feature/problem does this chunk solve? e.g., "Handles JWT authentication," "Renders the interactive dashboard," "Manages database schema definitions.")
+2.  **Tech Stack & Libraries:** (List key dependencies/packages heavily utilized here, e.g., "Uses Zod for validation," "Implements Framer Motion for UI transitions.")
+3.  **Configuration/Env Vars:** (List any environment variables or config keys detected, e.g., \`DATABASE_URL\`, \`JWT_SECRET\`.)
+4.  **Key API Routes/Commands:** (List distinct endpoints or CLI commands defined here, e.g., \`POST /api/v1/checkout\`, \`npm run generate-assets\`.)
+5.  **Architecture Note:** (Any distinct architectural pattern? e.g., "Uses Singleton pattern for DB connection," "Follows MVC controller logic.")
 
-You will get a clean, unified README.md.
-
-\`\`\`
+### OUTPUT FORMAT
+Provide the output as a compact bulleted list under the header: **[CHUNK ANALYSIS]**
+`
