@@ -54,5 +54,8 @@ export const getRepoContentApi = async (
   });
 
 export const getReadmeApi = (content: string[]) => {
-  return request<object>("POST", "/ai/readme", {contentArray : content});
+  const blob = new Blob([JSON.stringify(content)],{type:"application/json"})
+  const formData = new FormData();
+  formData.append("file", blob, "codebase.json")
+  return request<object>("POST", "/ai/readme", formData);
 };

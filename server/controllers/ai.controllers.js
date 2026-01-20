@@ -2,6 +2,7 @@ const { formatError, formatResponse } = require("../utils/responseFormatter");
 const { getChunks } = require("../utils/getChunks");
 const { default: OpenAI } = require("openai");
 const { SUMMARY_PROMPT, README_PROMPT } = require("../utils/prompts");
+const fs = require("fs");
 
 
 const client = new OpenAI({
@@ -10,12 +11,14 @@ const client = new OpenAI({
 })
 
 const getReadme = async (req, res) => {
-  const { contentArray } = req.body
 
-  if (!contentArray) {
+  if (!req.file) {
     return res.send(formatError(null, "Codebase not found", 400))
   }
+
   try {
+    const contentArray = JSON.parse(req.file.buffer.toString("utf-8"))
+    
     const chunks = getChunks(contentArray)
     const summaries = []
 
