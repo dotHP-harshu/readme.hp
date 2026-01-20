@@ -9,7 +9,7 @@ import {
   WandSparkles,
 } from "lucide-react";
 
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { makeImpFileArray, shuffleArray } from "../../utils/MainHeroUtil";
 import { getRepoTreeApi } from "../../api/githubApi";
 import type { fileTreeElement } from "../../types/types";
@@ -34,54 +34,66 @@ const PATH_COLORS = [
 // get files
 // https://api.github.com/repos/[USER]/[REPO]/git/trees/[BRANCH]?recursive=1
 
-interface MainHeroProps{
-  handleGenerate: (content:string[]) => void
-  setReadmeMarkdown:(str:string)=>void
+interface MainHeroProps {
+  handleGenerate: (content: string[]) => void;
+  setReadmeMarkdown: (str: string) => void;
 }
 
-function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
-  
-  
+function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
   const [inputUrl, setInputUrl] = useState<string>("");
-  const [repoDetail, setRepoDetail] = useState({username:"username", repo:"repo", branch:"main"})
+  const [repoDetail, setRepoDetail] = useState({
+    username: "username",
+    repo: "repo",
+    branch: "main",
+  });
   const [repoFiles, setRepoFiles] = useState<fileTreeElement[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState<boolean>(false);
   const [repoError, setrepoError] = useState<string>("");
-  const [isShowingFileContentSection , setIsShowingFileContentSection ] = useState<boolean>(false)
+  const [isShowingFileContentSection, setIsShowingFileContentSection] =
+    useState<boolean>(false);
+
+  const fileSelectionSectionRef = useRef<HTMLDivElement>(null);
 
   const handleUrlSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setReadmeMarkdown("")
+    setReadmeMarkdown("");
     if (inputUrl.trim() === "") return;
     getRepoTree(inputUrl);
-    
   };
-  
+
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
-  
-  const getRepoTree = useCallback(async (url:string) => {
-    setRepoFiles([])
+
+  const getRepoTree = useCallback(async (url: string) => {
+    if(fileSelectionSectionRef.current){
+      fileSelectionSectionRef.current.scrollIntoView({behavior:"smooth"})
+    }
+    setRepoFiles([]);
     setrepoError("");
     setIsLoadingFiles(true);
     const { data, error } = await getRepoTreeApi(url);
-    
+
     if (error) {
       setIsLoadingFiles(false);
       return setrepoError(error);
     }
-    
+
     if (typeof data === "object") {
-      const d = data as {username:string, repo:string, branch:string, fileArray: fileTreeElement[]}
-      setRepoDetail({username:d.username, repo:d.repo, branch:d.branch})
-      setRepoFiles(d.fileArray.filter((f)=>f.type !== "tree" ));
+      const d = data as {
+        username: string;
+        repo: string;
+        branch: string;
+        fileArray: fileTreeElement[];
+      };
+      setRepoDetail({ username: d.username, repo: d.repo, branch: d.branch });
+      setRepoFiles(d.fileArray.filter((f) => f.type !== "tree"));
       const impFiles = makeImpFileArray(d.fileArray);
       setSelectedPaths(new Set(impFiles.map((f) => f.path)));
-      setInputUrl("")
+      setInputUrl("");
     }
     setIsLoadingFiles(false);
     setrepoError("");
   }, []);
-  
+
   const toggleFile = useCallback((path: string) => {
     setSelectedPaths((prev) => {
       const next = new Set(prev);
@@ -89,7 +101,7 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
       return next;
     });
   }, []);
-  
+
   const pathColors = useMemo(() => {
     return shuffleArray(PATH_COLORS);
   }, []);
@@ -161,7 +173,7 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
         </form>
       </section>
       {/* Repository file selection starts  */}
-      <section className="flex justify-center items-center my-10 relative z-10 px-4">
+      <section ref={fileSelectionSectionRef} className="flex justify-center items-center my-10 relative z-10 px-4">
         <div className="overflow-hidden border-2 border-border-light dark:border-border-dark max-w-3xl w-full rounded-lg">
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div className="flex justify-center items-center gap-2">
@@ -224,22 +236,29 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
 
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div>
-              <small className={
-                `${totalSizeOfSelectedFiles / Math.pow(1024,2) > MAX_TOKEN_SIZE ? "text-red-500" : "text-text-muted-light dark:text-text-muted-dark"}
+              <small
+                className={`${totalSizeOfSelectedFiles / Math.pow(1024, 2) > MAX_TOKEN_SIZE ? "text-red-500" : "text-text-muted-light dark:text-text-muted-dark"}
                 font-code 
-                `
-              }>
+                `}
+              >
                 {`~ ${
                   totalSizeOfSelectedFiles / 1024 < 1024
                     ? `${(totalSizeOfSelectedFiles / 1024).toFixed(2)} Kb`
                     : `${(totalSizeOfSelectedFiles / (1024 * 1024)).toFixed(
-                        2
+                        2,
                       )} Mb`
                 } selected `}
               </small>
             </div>
             <div className="flex justify-center items-center gap-2">
-              <button disabled={selectedFiles.length === 0 || totalSizeOfSelectedFiles / Math.pow(1024,2) > MAX_TOKEN_SIZE} onClick={()=>setIsShowingFileContentSection(true)} className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none">
+              <button
+                disabled={
+                  selectedFiles.length === 0 ||
+                  totalSizeOfSelectedFiles / Math.pow(1024, 2) > MAX_TOKEN_SIZE
+                }
+                onClick={() => setIsShowingFileContentSection(true)}
+                className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none"
+              >
                 <span className="text-base font-semibold tracking-tight">
                   Analyze Selected Files
                 </span>
@@ -251,10 +270,15 @@ function MainHero({handleGenerate, setReadmeMarkdown}: MainHeroProps) {
       </section>
       {/* Repository file selection ends */}
 
-      {
-        isShowingFileContentSection && <FileAnaSection hideSection={()=>setIsShowingFileContentSection(false)} files={Array.from(selectedPaths)} repoDetail={repoDetail} repoFiles={repoFiles} handleGenerate={handleGenerate}/>
-      }
-      
+      {isShowingFileContentSection && (
+          <FileAnaSection
+            hideSection={() => setIsShowingFileContentSection(false)}
+            files={Array.from(selectedPaths)}
+            repoDetail={repoDetail}
+            repoFiles={repoFiles}
+            handleGenerate={handleGenerate}
+          />
+      )}
     </>
   );
 }

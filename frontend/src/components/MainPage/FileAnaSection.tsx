@@ -95,7 +95,7 @@ function FileAnaSection({
             </p>
           </div>
         )}
-        {!isAnalysingFiles && (
+        {!isAnalysingFiles && analyseError === ""  && (
           <div className="w-full h-full bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg flex justify-between items-center flex-col">
             <ul className="w-full max-h-[85%] overflow-auto scroller p-2 border-b-2 border-border-light dark:border-border-dark">
               {unsuccessfullFiles.length > 0 &&
