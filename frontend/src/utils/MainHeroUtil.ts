@@ -15,6 +15,27 @@ const importantExtensions = [
   "json", // Project configs
   "rs", // Rust
   "sh", // Shell scripts
+  "jsx",
+  "tsx",
+  "yml",
+  "yaml", // CI, Docker, configs
+  "toml", // Rust, Python (poetry)
+  "ini", // legacy configs
+  "cfg",
+  "Dockerfile",
+  "dockerignore",
+  "md", // docs
+  "rst", // Python docs
+  "scss",
+  "sass",
+  "less",
+  "graphql",
+  "proto", // gRPC
+  "sql",
+  "gradle",
+  "groovy",
+  "kt", // Kotlin (Android)
+  "swift", // iOS
 ];
 
 const frameworkIgnoreList = new Set([
@@ -77,9 +98,6 @@ const frameworkIgnoreList = new Set([
   ".gitlab-ci.yml",
 
   // Testing / Coverage
-  "test",
-  "tests",
-  "__tests__",
   "coverage",
   "jest.config.js",
   "vitest.config.ts",
@@ -135,22 +153,39 @@ const importantFilenames = [
   "config.js",
   "dockerfile",
   "Makefile",
+  "tsconfig.json",
+  "jsconfig.json",
+  "index.ts",
+  "main.ts",
+  "app.ts",
+  "server.ts",
+  "src/main.tsx",
+  "src/App.tsx",
+  "angular.json",
+  "openapi.yaml",
+  "swagger.json",
+  ".env.example",
+  "docker-compose.yml",
+  "schema.prisma",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
 ];
 
 export function makeImpFileArray(array: fileTreeElement[]): fileTreeElement[] {
+  return array.filter((f) => {
+    const file = f as fileTreeElement;
+    if (!file.path) return false;
+    const path = file.path.toLocaleLowerCase();
+    const segments = path.split("/");
+    // Ignored
+    if (segments.some((seg) => frameworkIgnoreList.has(seg))) return false;
+    const fileName = segments[segments.length - 1];
+    const ext = fileName.split(".").pop() || "";
 
-    return  array.filter((f)=>{
-        const file = f as fileTreeElement
-        if(! file.path) return false
-        const path = file.path.toLocaleLowerCase()
-        const segments = path.split("/")
-        // Ignored
-        if(segments.some((seg) => frameworkIgnoreList.has(seg))) return false
-        const fileName = segments[segments.length-1]
-        const ext = fileName.split(".").pop() || ""
-
-        return (importantExtensions.includes(ext) || importantFilenames.includes(fileName))
-    })
+    return (
+      importantExtensions.includes(ext) || importantFilenames.includes(fileName)
+    );
+  });
 }
 
 export function shuffleArray(array: string[]): string[] {

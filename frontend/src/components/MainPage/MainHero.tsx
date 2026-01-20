@@ -35,7 +35,7 @@ const PATH_COLORS = [
 // https://api.github.com/repos/[USER]/[REPO]/git/trees/[BRANCH]?recursive=1
 
 interface MainHeroProps{
-  handleGenerate: (content:string) => void
+  handleGenerate: (content:string[]) => void
   setReadmeMarkdown:(str:string)=>void
 }
 

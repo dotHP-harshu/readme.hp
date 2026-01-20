@@ -10,7 +10,7 @@ function MainPage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [readmeMarkdown, setReadmeMarkdown] = useState<string>("");
 
-  const handleGenerate = async (content: string) => {
+  const handleGenerate = async (content: string[]) => {
     setIsGenerating(true);
     const { data, error } = await getReadmeApi(content);
     if (error) {

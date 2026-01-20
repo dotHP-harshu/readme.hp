@@ -53,9 +53,6 @@ export const getRepoContentApi = async (
     branch,
   });
 
-export const getReadmeApi = (content: string) => {
-  const blob = new Blob([content], { type: "text/plain" });
-  const formData = new FormData();
-  formData.append("file", blob, "codebase.txt");
-  return request<object>("POST", "/ai/readme", formData);
+export const getReadmeApi = (content: string[]) => {
+  return request<object>("POST", "/ai/readme", {contentArray : content});
 };

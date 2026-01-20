@@ -14,7 +14,7 @@ interface FileAnaSectionProps {
   hideSection: () => void;
   files: string[];
   repoFiles: fileTreeElement[];
-  handleGenerate: (content: string) => void;
+  handleGenerate: (content: string[]) => void;
   repoDetail: { username: string; repo: string; branch: string };
 }
 
@@ -29,7 +29,7 @@ function FileAnaSection({
   const [unsuccessfullFiles, setUnsuccessfullFiles] = useState<string[]>([]);
   const [isAnalysingFiles, setIsAnalysingFiles] = useState<boolean>(true);
   const [analyseError, setAnalyseError] = useState<string>("");
-  const [fileContent, setFileContent] = useState<string>("");
+  const [fileContent, setFileContent] = useState<Array<string>>([]);
 
   const analyseFiles = async () => {
     setAnalyseError("");
@@ -48,10 +48,13 @@ function FileAnaSection({
       const d = data as {
         successfullFiles: string[];
         unsuccessfullFiles: string[];
-        content: string;
+        content: string[];
       };
-      const repoPathsString = repoFiles.reduce((p, f) => p + `${f.path}\n`, "");
-      const newContent = repoPathsString + d.content;
+      d.content.push(
+        `repo: ${repoDetail.repo} repo owner: ${repoDetail.username}, repo branch: ${repoDetail.branch}` +
+          repoFiles.reduce((p, f) => p + `${f.path}\n`, ""),
+      );
+      const newContent = d.content;
       setFileContent(newContent);
 
       setUnsuccessfullFiles(d.unsuccessfullFiles);
@@ -129,7 +132,7 @@ function FileAnaSection({
               </p>
               <button
                 onClick={() => {
-                  hideSection()
+                  hideSection();
                   handleGenerate(fileContent);
                 }}
                 className="bg-primary select-none flex justify-center items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200"
