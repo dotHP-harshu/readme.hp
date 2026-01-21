@@ -57,7 +57,7 @@ function ReadmeGenLoader() {
   return (
     <div className="flex justify-center items-center w-fit h-fit flex-col p-[4vw]">
       <div className=" flex justify-center items-center w-fit h-fit">
-        <span className="font-mono text-5xl tracking-tight">readme</span>
+        <span className="font-mono text-5xl tracking-tight max-xs:text-xl">readme</span>
         <svg
           ref={svgRef}
           width="40"
@@ -78,13 +78,13 @@ function ReadmeGenLoader() {
     "
           />
         </svg>
-        <span className="italic font-bold tracking-tight text-5xl ">hp</span>
+        <span className="italic font-bold tracking-tight text-5xl max-xs:text-xl">hp</span>
       </div>
       <p
         ref={paraRef}
         className="mt-2 text-text-muted-light dark:text-text-muted-dark text-sm text-center"
       >
-        <span className="typing-text">
+        <span className="typing-text max-xs:text-xs">
           Generating Readme. It may take time....
         </span>
         <span className="cursor w-1 h-full bg-white ml-2"></span>

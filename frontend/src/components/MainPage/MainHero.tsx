@@ -2,11 +2,11 @@ import {
   AlertCircle,
   AlertTriangle,
   CircleCheckBig,
+  Code2,
   FolderClosed,
   Link2,
   Loader2,
   MoveRight,
-  WandSparkles,
 } from "lucide-react";
 
 import React, { useCallback, useMemo, useRef, useState } from "react";
@@ -115,7 +115,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
 
   return (
     <>
-      <section className="flex justify-center items-center flex-col min-h-[70dvh] space-y-6 px-6 ">
+      <section className="flex justify-center items-center flex-col min-h-[70dvh] space-y-6 px-6 max-xs:pt-20">
         <div
           className="absolute inset-0 pointer-events-none z-0"
           style={{
@@ -158,9 +158,9 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
               placeholder="https://github.com/username/project"
             />
             <button className="bg-primary flex justify-center select-none items-center gap-2 px-4 py-1 outline-none rounded-lg cursor-pointer text-text-light hover:bg-primary-hover transition-colors duration-200">
-              <WandSparkles strokeWidth={1.25} />{" "}
+              <Code2 strokeWidth={1.25} />{" "}
               <span className="text-lg font-semibold tracking-normal max-sm:hidden">
-                Generate
+                View
               </span>
             </button>
           </div>
@@ -175,22 +175,22 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
       {/* Repository file selection starts  */}
       <section ref={fileSelectionSectionRef} className="flex justify-center items-center my-10 relative z-10 px-4">
         <div className="overflow-hidden border-2 border-border-light dark:border-border-dark max-w-3xl w-full rounded-lg">
-          <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
+          <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between gap-4">
             <div className="flex justify-center items-center gap-2">
               <FolderClosed className="text-text-muted-light dark:text-text-muted-dark" />
-              <span className="font-semibold">Repository Context</span>
+              <span className="font-semibold max-xs:hidden">Repository Context</span>
             </div>
             <div>
-              <small className="font-code text-text-muted-light dark:text-text-muted-dark">
+              <p className="font-code leading-none text-text-muted-light dark:text-text-muted-dark max-xs:text-xs max-xs:text-wrap text-right" >
                 github.com/{repoDetail.username}/{repoDetail.repo}
-              </small>
+              </p>
             </div>
           </div>
 
           {/* Files Selection  */}
           <div className="bg-surface-secondary-light dark:bg-surface-secondary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 ">
-            <div className="flex items-center justify-between gap-2 relative px-4 rounded-lg  ">
-              <p className="truncate cursor-pointer peer">Folder/file</p>
+            <div className="flex items-center justify-between gap-2 relative px-4 rounded-lg max-xs:px-0 ">
+              <p className="truncate cursor-pointer peer max-xs:text-sm">Folder/file</p>
               <small className="inline-block font-code text-text-muted-light dark:text-text-muted-dark text-center w-20 overflow-hidden">
                 size
               </small>
@@ -259,7 +259,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
                 onClick={() => setIsShowingFileContentSection(true)}
                 className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none"
               >
-                <span className="text-base font-semibold tracking-tight">
+                <span className="text-base font-semibold tracking-tight max-xs:hidden">
                   Analyze Selected Files
                 </span>
                 <MoveRight />

@@ -68,14 +68,14 @@ function FileAnaSection({
   }, []);
 
   return (
-    <div className="bg-bg-light/50 dark:bg-bg-dark/50 backdrop-blur-xs fixed top-0 left-0 w-dvw h-dvh z-10 flex justify-center items-center border-2 border-border-light dark:border-border-dark ">
-      <div className="bg-surface-primary-light dark:bg-surface-primary-dark rounded-lg w-[80vw] h-[80vh] max-w-4xl relative flex justify-center items-center p-6">
+    <div className="bg-bg-light/50 dark:bg-bg-dark/50 backdrop-blur-xs fixed top-0 left-0 w-dvw h-dvh flex justify-center items-center border-2 border-border-light dark:border-border-dark z-99 p-6">
+      <div className= "w-full bg-surface-primary-light dark:bg-surface-primary-dark rounded-lg  h-[80vh] max-w-4xl relative flex justify-center items-center p-6">
         <button
           onClick={hideSection}
           className="text-primary hover:text-primary-hover hover:scale-105 hover:rotate-90 transition-all duration-200 outline-none border-none cursor-pointer absolute top-0 right-0"
         >
           <span>
-            <X size={30} strokeWidth={5} />
+            <X size={30} strokeWidth={2} />
           </span>
         </button>
         {!isAnalysingFiles && analyseError !== "" && (

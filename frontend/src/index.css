@@ -33,9 +33,11 @@
 
 .scroller::-webkit-scrollbar {
   width: 5px;
+  height: 5px;
 }
 .scroller::-webkit-scrollbar-thumb {
   width: 10px;
+  height: 10px;
   background-color: #0d8ccb93;
   border-radius: 10px;
   cursor: pointer;
@@ -57,6 +59,32 @@
 .disable-tailwind :where(h1, h2, h3, h4, h5, h6, p, ul, ol, li) {
   all: revert;
 }
+.disable-tailwind > table {
+  border: 1px solid var(--color-border-light);
+  border-collapse: collapse;
+  background-color: var(--color-surface-primary-light);
+  color: var(--color-text-light);
+}
+
+.disable-tailwind > table td,
+.disable-tailwind > table th {
+  border: 1px solid var(--color-border-light);
+  padding: 2px 6px;
+  font-size: var(--font-size-sm);
+}
+
+/* Dark mode */
+.dark .disable-tailwind > table {
+  border-color: var(--color-border-dark);
+  background-color: var(--color-surface-primary-dark);
+  color: var(--color-text-dark);
+}
+
+.dark .disable-tailwind > table td,
+.dark .disable-tailwind > table th {
+  border-color: var(--color-border-dark);
+}
+
 
 .hljs {
   font-size: 0.875rem;
