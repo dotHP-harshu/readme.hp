@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import GeneratingReadme from "../components/MainPage/GeneratingReadme";
 import MainHero from "../components/MainPage/MainHero";
-import { getReadmeApi } from "../api/serverApi";
+import { abortGetReadmeApi, getReadmeApi } from "../api/serverApi";
 import ReadmeSection from "../components/MainPage/ReadmeSection";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -9,7 +9,7 @@ import { AlertCircle, Plus } from "lucide-react";
 
 function MainPage() {
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
-  const [readmeMarkdown, setReadmeMarkdown] = useState<string>("# hello this is readme");
+  const [readmeMarkdown, setReadmeMarkdown] = useState<string>("");
   const markdownSectionRef = useRef<HTMLDivElement>(null);
   const [error , setError ] = useState<string>("")
 
@@ -30,6 +30,11 @@ function MainPage() {
     }
 
     setIsGenerating(false);
+  };
+
+  const handleAbort = () => {
+    abortGetReadmeApi();
+    setIsGenerating(false)
   };
 
   useEffect(()=>{
@@ -59,7 +64,7 @@ function MainPage() {
         handleGenerate={handleGenerate}
         setReadmeMarkdown={setReadmeMarkdown}
       />
-      {isGenerating && <GeneratingReadme />}
+      {isGenerating && <GeneratingReadme handleAbort={handleAbort} />}
       {readmeMarkdown && (
         <div ref={markdownSectionRef}>
           <ReadmeSection readmeMarkdown={readmeMarkdown} />
