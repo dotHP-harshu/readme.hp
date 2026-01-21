@@ -1,4 +1,4 @@
-import { Github } from "lucide-react";
+import {  MessageCircleHeart } from "lucide-react";
 import { useNavigate } from "react-router";
 
 function Footer() {
@@ -15,15 +15,18 @@ function Footer() {
           Build with ❤️ by dotHP
         </p>
       </div>
-      <div className="flex justify-center items-center">
-        <a
-          href="https://github.com/dothp-harshu/readme.hp"
-          target="_blank"
-          className="p-2 rounded-full bg-surface-secondary-light dark:bg-surface-secondary-dark inline-block w-fit h-fit cursor-pointer text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors duration-200 hover:bg-surface-secondary-hover-light dark:hover:bg-surface-secondary-hover-dark"
-        >
-          <Github />
-        </a>
-      </div>
+     <div className="select-none w-fit h-fit ">
+          <button
+            onClick={()=>navigate("/contact")}
+            className="flex justify-center items-center gap-2 border-2 border-border-light dark:border-border-dark px-4 py-1 rounded-lg hover:bg-surface-secondary-hover-light dark:hover:bg-surface-secondary-hover-dark transition-colors duration-300 outline-none cursor-pointer
+        "
+          >
+            <span>
+              <MessageCircleHeart className="" size={16} />
+            </span>
+            <span className="text-sm font-semibold">Feedback</span>
+          </button>
+        </div>
     </div>
   );
 }
