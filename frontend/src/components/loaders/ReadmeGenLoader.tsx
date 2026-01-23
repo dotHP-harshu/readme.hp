@@ -57,18 +57,21 @@ function ReadmeGenLoader() {
   return (
     <div className="flex justify-center items-center w-fit h-fit flex-col p-[4vw]">
       <div className=" flex justify-center items-center w-fit h-fit">
-        <span className="font-mono text-5xl tracking-tight max-xs:text-xl">readme</span>
-        <svg
-          ref={svgRef}
-          width="40"
-          height="40"
-          viewBox="0 0 60 60"
-          className="translate-y-2"
-        >
-          <path
-            id="shape"
-            fill="#25aff3"
-            d="
+        <span className="font-mono text-5xl tracking-tight max-xs:text-xl">
+          readme
+        </span>
+        <div className="w-10 h-10 max-xs:w-5 max-xs:h-5">
+          <svg
+            ref={svgRef}
+            width="100%"
+            height="100%"
+            viewBox="0 0 60 60"
+            className="translate-y-2"
+          >
+            <path
+              id="shape"
+              fill="#25aff3"
+              d="
       M30 5
       C44 5 55 16 55 30
       C55 44 44 55 30 55
@@ -76,13 +79,16 @@ function ReadmeGenLoader() {
       C5 16 16 5 30 5
       Z
     "
-          />
-        </svg>
-        <span className="italic font-bold tracking-tight text-5xl max-xs:text-xl">hp</span>
+            />
+          </svg>
+        </div>
+        <span className="italic font-bold tracking-tight text-5xl max-xs:text-xl">
+          hp
+        </span>
       </div>
       <p
         ref={paraRef}
-        className="mt-2 text-text-muted-light dark:text-text-muted-dark text-sm text-center"
+        className="mt-2 text-text-muted-light dark:text-text-muted-dark text-sm text-center min-h-40 flex justify-center items-center"
       >
         <span className="typing-text max-xs:text-xs">
           Generating Readme. It may take time....
