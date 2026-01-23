@@ -201,7 +201,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
                 size
               </small>
             </div>
-            <u className="overflow-y-auto scroller max-h-[40dvh]">
+            <ul className="overflow-y-auto scroller max-h-[40dvh]">
               {isLoadingFiles && (
                 <div className="flex flex-col gap-4 justify-center items-center w-full min-h-[20vh]">
                   <Loader2 className="text-text-muted-light dark:text-text-muted-dark animate-spin" />
@@ -237,7 +237,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
                     isChecked={selectedPaths.has(file.path)}
                   />
                 ))}
-            </u>
+            </ul>
           </div>
 
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">

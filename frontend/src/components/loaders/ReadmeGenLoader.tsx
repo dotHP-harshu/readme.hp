@@ -88,12 +88,11 @@ function ReadmeGenLoader() {
       </div>
       <p
         ref={paraRef}
-        className="mt-2 text-text-muted-light dark:text-text-muted-dark text-sm text-center min-h-40 flex justify-center items-center"
+        className="mt-2 text-text-muted-light dark:text-text-muted-dark text-sm text-center min-h-20 flex justify-center items-center"
       >
         <span className="typing-text max-xs:text-xs">
           Generating Readme. It may take time....
         </span>
-        <span className="cursor w-1 h-full bg-white ml-2"></span>
       </p>
     </div>
   );

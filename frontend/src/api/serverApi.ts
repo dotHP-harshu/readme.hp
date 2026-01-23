@@ -25,7 +25,6 @@ const request = async <T>(
   data: any = null,
   abort?: AbortController
 ): Promise<ResponseInterface<T>> => {
-  console.log({ url, method });
   try {
     const res = await api<ApiResponseInterface<T>>({
       method,
@@ -33,7 +32,6 @@ const request = async <T>(
       url,
       signal: abort?.signal,
     });
-    console.log(res);
     if (res.data.success) {
       return { data: res.data.data, error: null };
     }

@@ -1,4 +1,4 @@
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, Square } from "lucide-react";
 import ReadmeGenLoader from "../loaders/ReadmeGenLoader";
 
 
@@ -13,8 +13,9 @@ function GeneratingReadme({handleAbort}: {handleAbort: () => void}) {
         </div>
         <ReadmeGenLoader />
         <div className="mt-6">
-          <button onClick={handleAbort} className="select-none  bg-red-600/20 text-red-600 border border-red-600/25 rounded-lg px-4 py-2 cursor-pointer">
-            <span> Abort Request</span>
+          <button onClick={handleAbort} className="select-none  bg-red-600/20 text-red-600 border border-red-600/25 rounded-lg px-4 py-2 cursor-pointer flex justify-center items-center gap-2">
+            <span>Cancel </span>
+            <span><Square fill="#e7000b" strokeWidth={0}/></span>
           </button>
         </div>
       </div>

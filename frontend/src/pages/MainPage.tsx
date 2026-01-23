@@ -24,11 +24,10 @@ function MainPage() {
       setError(error)
     }
 
-    if (typeof data === "object") {
+    if (data !== null && typeof data === "object") {
       const res = data as { readme: string };
       if (res.readme && typeof res.readme === "string") {
         setReadmeMarkdown(res.readme);
-       
       }
     }
 
