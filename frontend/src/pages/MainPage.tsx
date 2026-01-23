@@ -6,8 +6,11 @@ import ReadmeSection from "../components/MainPage/ReadmeSection";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { AlertCircle, Plus } from "lucide-react";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 function MainPage() {
+  usePageTitle("Generate README from GitHub – Readme.hp")
+  
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [readmeMarkdown, setReadmeMarkdown] = useState<string>("");
   const markdownSectionRef = useRef<HTMLDivElement>(null);

@@ -5,6 +5,7 @@ import type React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 
 
@@ -31,6 +32,8 @@ const CONNECT_CHANNELS: ConnectChannelInterface[] = [
 ]
 
 function ContactPage() {
+  usePageTitle("Contact & Feedback – Readme.hp")
+
   const [error, seterror] = useState<string>("")
   const [sending, setSending] = useState<boolean>(false)
   const [submitted, setSubmitted] = useState<boolean>(false)

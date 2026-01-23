@@ -5,8 +5,10 @@ import Feature from "../components/HomePage/Feature";
 import HomeHero from "../components/HomePage/HomeHero";
 import Limitations from "../components/HomePage/Limitations";
 import WorkFlow from "../components/HomePage/WorkFlow";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 function HomePage() {
+  usePageTitle("Readme.hp – AI README Generator from GitHub Repos")
   return (
     <main className="bg-bg-light dark:bg-bg-dark text-text-light dark:text-text-dark">
       <Header/>
