@@ -1,8 +1,11 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import ThemeProvider from "./context/ThemeProvider";
-import HomePage from "./pages/HomePage";
-import MainPage from "./pages/MainPage";
-import ContactPage from "./pages/ContactPage";
+import { lazy, Suspense } from "react";
+import PageLoader from "./components/PageLoader";
+
+const HomePage = lazy(() => import("./pages/HomePage"));
+const MainPage = lazy(() => import("./pages/MainPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
 
 function App() {
   const Routes = createBrowserRouter([
@@ -21,7 +24,9 @@ function App() {
   ]);
   return (
     <ThemeProvider>
-      <RouterProvider router={Routes}/>
+      <Suspense fallback={<PageLoader />}>
+        <RouterProvider router={Routes} />
+      </Suspense>
     </ThemeProvider>
   );
 }

@@ -16,7 +16,6 @@ import type { fileTreeElement } from "../../types/types";
 import RepoFileItem from "../RepoFileSelection/RepoFileItem";
 import FileAnaSection from "./FileAnaSection";
 
-const MAX_TOKEN_SIZE = 2; // in MB
 
 const PATH_COLORS = [
   "#FF9F1C", // mango
@@ -64,8 +63,8 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
   const [selectedPaths, setSelectedPaths] = useState<Set<string>>(new Set());
 
   const getRepoTree = useCallback(async (url: string) => {
-    if(fileSelectionSectionRef.current){
-      fileSelectionSectionRef.current.scrollIntoView({behavior:"smooth"})
+    if (fileSelectionSectionRef.current) {
+      fileSelectionSectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
     setRepoFiles([]);
     setrepoError("");
@@ -173,15 +172,20 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
         </form>
       </section>
       {/* Repository file selection starts  */}
-      <section ref={fileSelectionSectionRef} className="flex justify-center items-center my-10 relative z-10 px-4">
+      <section
+        ref={fileSelectionSectionRef}
+        className="flex justify-center items-center my-10 relative z-10 px-4"
+      >
         <div className="overflow-hidden border-2 border-border-light dark:border-border-dark max-w-3xl w-full rounded-lg">
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between gap-4">
             <div className="flex justify-center items-center gap-2">
               <FolderClosed className="text-text-muted-light dark:text-text-muted-dark" />
-              <span className="font-semibold max-xs:hidden">Repository Context</span>
+              <span className="font-semibold max-xs:hidden">
+                Repository Context
+              </span>
             </div>
             <div>
-              <p className="font-code leading-none text-text-muted-light dark:text-text-muted-dark max-xs:text-xs max-xs:text-wrap text-right" >
+              <p className="font-code leading-none text-text-muted-light dark:text-text-muted-dark max-xs:text-xs max-xs:text-wrap text-right">
                 github.com/{repoDetail.username}/{repoDetail.repo}
               </p>
             </div>
@@ -190,7 +194,9 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
           {/* Files Selection  */}
           <div className="bg-surface-secondary-light dark:bg-surface-secondary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 ">
             <div className="flex items-center justify-between gap-2 relative px-4 rounded-lg max-xs:px-0 ">
-              <p className="truncate cursor-pointer peer max-xs:text-sm">Folder/file</p>
+              <p className="truncate cursor-pointer peer max-xs:text-sm">
+                Folder/file
+              </p>
               <small className="inline-block font-code text-text-muted-light dark:text-text-muted-dark text-center w-20 overflow-hidden">
                 size
               </small>
@@ -220,7 +226,6 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
                 </div>
               )}
 
-
               {repoFiles &&
                 repoFiles.length > 0 &&
                 repoFiles.map((file) => (
@@ -237,11 +242,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
 
           <div className="bg-surface-primary-light dark:bg-surface-primary-dark border-b-2 border-b-border-light dark:border-b-border-dark px-4 py-3 flex items-center justify-between">
             <div>
-              <small
-                className={`${totalSizeOfSelectedFiles / Math.pow(1024, 2) > MAX_TOKEN_SIZE ? "text-red-500" : "text-text-muted-light dark:text-text-muted-dark"}
-                font-code 
-                `}
-              >
+              <small className="text-text-muted-light dark:text-text-muted-dark font-code">
                 {`~ ${
                   totalSizeOfSelectedFiles / 1024 < 1024
                     ? `${(totalSizeOfSelectedFiles / 1024).toFixed(2)} Kb`
@@ -253,10 +254,7 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
             </div>
             <div className="flex justify-center items-center gap-2">
               <button
-                disabled={
-                  selectedFiles.length === 0 ||
-                  totalSizeOfSelectedFiles / Math.pow(1024, 2) > MAX_TOKEN_SIZE
-                }
+                disabled={selectedFiles.length === 0}
                 onClick={() => setIsShowingFileContentSection(true)}
                 className="flex justify-center items-center gap-2 px-4 py-1.5 bg-surface-secondary-light dark:bg-surface-secondary-dark border-2 border-border-light dark:border-border-dark rounded-lg outline-none cursor-pointer select-none"
               >
@@ -272,13 +270,13 @@ function MainHero({ handleGenerate, setReadmeMarkdown }: MainHeroProps) {
       {/* Repository file selection ends */}
 
       {isShowingFileContentSection && (
-          <FileAnaSection
-            hideSection={() => setIsShowingFileContentSection(false)}
-            files={Array.from(selectedPaths)}
-            repoDetail={repoDetail}
-            repoFiles={repoFiles}
-            handleGenerate={handleGenerate}
-          />
+        <FileAnaSection
+          hideSection={() => setIsShowingFileContentSection(false)}
+          files={Array.from(selectedPaths)}
+          repoDetail={repoDetail}
+          repoFiles={repoFiles}
+          handleGenerate={handleGenerate}
+        />
       )}
     </>
   );
