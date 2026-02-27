@@ -25,7 +25,7 @@ const getReadme = async (req, res) => {
     for (const chunk of chunks) {
       try {
         const apiResponse = await client.chat.completions.create({
-          model: 'xiaomi/mimo-v2-flash:free',
+          model: 'z-ai/glm-4.5-air:free',
           messages: [
             {
               role: 'user',
@@ -41,7 +41,7 @@ const getReadme = async (req, res) => {
     }
 
     const response = await client.chat.completions.create({
-      model: 'xiaomi/mimo-v2-flash:free',
+      model: 'z-ai/glm-4.5-air:free',
       messages: [
         {
           role: 'user',
